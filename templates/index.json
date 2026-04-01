@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "customized_teez_homepage": {
+      "type": "customized-teez-homepage",
+      "settings": {}
+    }
+  },
+  "order": ["customized_teez_homepage"]
+}
