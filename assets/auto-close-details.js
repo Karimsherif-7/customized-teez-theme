@@ -1,0 +1,1 @@
+// Auto close details component
