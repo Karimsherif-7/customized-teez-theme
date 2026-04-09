@@ -1,9 +1,1 @@
-{
-  "sections": {
-    "customized_teez_homepage": {
-      "type": "customized-teez-homepage",
-      "settings": {}
-    }
-  },
-  "order": ["customized_teez_homepage"]
-}
+{"sections":{"customized_teez_homepage":{"type":"customized-teez-homepage","name":"Customized Tees Homepage","settings":{"hero_image":"shopify://shop_images/a-hand-removes-a-sweater-from-a-clothing-rack.jpg","cat_image_1":"shopify://shop_images/image_df9e347e-d91d-4269-8228-723c9a889461.png","cat_image_2":"shopify://shop_images/custom-pullover-hoodie.png","cat_image_3":"shopify://shop_images/image_5e1ffe0c-2d0a-445e-bec8-ffe0a788dba4.png","cat_image_4":"shopify://shop_images/image_594a51d9-e4fa-4690-9ede-ef1243abe3d6.png","cat_image_5":"shopify://shop_images/custom-sweatpants.png","cat_image_6":"shopify://shop_images/custom-pullover-hoodie.png"}},"product_list_PwjXPe":{"type":"product-list","name":"t:names.products_grid","settings":{"collection":"t-shirts","layout_type":"grid","carousel_on_mobile":false,"max_products":4,"columns":4,"mobile_columns":"2","color_scheme":"scheme-1","padding-block-start":48,"padding-block-end":48}},"product_list_P8EABt":{"type":"product-list","name":"t:names.products_grid","settings":{"collection":"college","layout_type":"grid","carousel_on_mobile":false,"max_products":8,"columns":4,"mobile_columns":"2","color_scheme":"scheme-1","padding-block-start":48,"padding-block-end":48}}},"order":["customized_teez_homepage","product_list_PwjXPe","product_list_P8EABt"]}
