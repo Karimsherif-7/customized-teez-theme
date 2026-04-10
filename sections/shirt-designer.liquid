@@ -1,0 +1,1619 @@
+{%- comment -%} ============================================================
+  Customized Teez — Shirt Designer Section
+  Placement: sections/shirt-designer.liquid
+  Template:  templates/page.shirt-designer.json
+  Features:  Text tool · Image upload · Shirt color · Print placement
+             Add to Cart (Shopify AJAX) · Download design proof
+{%- endcomment -%}
+
+{%- assign design_product = all_products['custom-classic-tee'] -%}
+{%- if design_product == empty -%}
+  {%- assign design_product = all_products['oversized-tee'] -%}
+{%- endif -%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Anton&family=Bebas+Neue&family=Roboto:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+<style>
+/* ================================================================
+   SHIRT DESIGNER — CORE STYLES
+================================================================ */
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E2C882;
+  --gold-dark: #A8883C;
+  --cream: #FAF7F0;
+  --dark: #1A1A1A;
+  --mid: #555555;
+  --border: #E0D9CC;
+  --radius: 10px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.sd-page {
+  background: var(--cream);
+  min-height: 100vh;
+  font-family: 'Roboto', sans-serif;
+  padding: 0 0 60px;
+}
+
+/* ---- Header ---- */
+.sd-header {
+  background: var(--dark);
+  color: #fff;
+  text-align: center;
+  padding: 28px 20px 22px;
+  border-bottom: 3px solid var(--gold);
+}
+.sd-header h1 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 4px;
+}
+.sd-header p {
+  color: #aaa;
+  font-size: 0.85rem;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* ---- Layout ---- */
+.sd-layout {
+  display: grid;
+  grid-template-columns: 270px 1fr 260px;
+  gap: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  align-items: start;
+}
+
+/* ---- Panel Base ---- */
+.sd-panel {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.sd-panel-header {
+  background: var(--dark);
+  color: var(--gold);
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 10px 16px;
+}
+
+/* ================================================================
+   LEFT PANEL — TOOLS
+================================================================ */
+.sd-tools {
+  position: sticky;
+  top: 20px;
+}
+
+/* Placement selector */
+.sd-placement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 12px;
+}
+.sd-placement-btn {
+  background: var(--cream);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+  font-size: 0.7rem;
+  font-family: 'Roboto', sans-serif;
+  color: var(--mid);
+}
+.sd-placement-btn svg { display: block; margin: 0 auto 4px; }
+.sd-placement-btn:hover { border-color: var(--gold); color: var(--dark); }
+.sd-placement-btn.active {
+  background: var(--dark);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* Color swatches */
+.sd-colors {
+  padding: 10px 12px 12px;
+  border-top: 1px solid var(--border);
+}
+.sd-colors-label {
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.sd-swatch-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.sd-swatch {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #ccc;
+  transition: transform 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+.sd-swatch:hover { transform: scale(1.15); }
+.sd-swatch.active {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.4);
+}
+.sd-swatch[title="White"] { border-color: #bbb; }
+
+/* Tool tabs */
+.sd-tool-tabs {
+  display: flex;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.sd-tool-tab {
+  flex: 1;
+  padding: 10px 8px;
+  background: var(--cream);
+  border: none;
+  cursor: pointer;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--mid);
+  transition: all 0.2s;
+  border-bottom: 2px solid transparent;
+}
+.sd-tool-tab.active {
+  background: #fff;
+  color: var(--dark);
+  border-bottom-color: var(--gold);
+}
+.sd-tool-tab:hover { color: var(--dark); }
+
+/* Tool panels */
+.sd-tool-panel { display: none; padding: 14px; }
+.sd-tool-panel.active { display: block; }
+
+/* Text controls */
+.sd-field-group { margin-bottom: 12px; }
+.sd-field-label {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+.sd-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-family: 'Roboto', sans-serif;
+  color: var(--dark);
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  background: #fff;
+}
+.sd-input:focus { outline: none; border-color: var(--gold); }
+.sd-select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: var(--dark);
+  background: #fff;
+  box-sizing: border-box;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 0.2s;
+}
+.sd-select:focus { outline: none; border-color: var(--gold); }
+
+.sd-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.sd-color-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sd-color-row input[type="color"] {
+  width: 36px; height: 30px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 2px;
+  cursor: pointer;
+  background: #fff;
+  flex-shrink: 0;
+}
+.sd-text-colors {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.sd-text-color-swatch {
+  width: 20px; height: 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+.sd-text-color-swatch.active { border-color: var(--gold); }
+
+.sd-btn-primary {
+  width: 100%;
+  padding: 10px;
+  background: var(--gold);
+  color: var(--dark);
+  border: none;
+  border-radius: 6px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.1s;
+}
+.sd-btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+.sd-btn-primary:active { transform: translateY(0); }
+
+.sd-btn-secondary {
+  width: 100%;
+  padding: 9px;
+  background: transparent;
+  color: var(--mid);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 6px;
+}
+.sd-btn-secondary:hover { border-color: var(--gold); color: var(--dark); }
+
+/* Image upload area */
+.sd-upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+  padding: 20px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 12px;
+}
+.sd-upload-area:hover { border-color: var(--gold); background: #fffdf5; }
+.sd-upload-area svg { margin: 0 auto 8px; display: block; }
+.sd-upload-area p {
+  font-size: 0.75rem;
+  color: var(--mid);
+  margin: 0;
+  line-height: 1.5;
+}
+.sd-upload-area strong { color: var(--dark); }
+
+/* Object controls */
+.sd-object-controls {
+  background: var(--cream);
+  border-top: 1px solid var(--border);
+  padding: 10px 14px;
+}
+.sd-object-controls-title {
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--mid);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.sd-object-btn-row { display: flex; gap: 6px; }
+.sd-obj-btn {
+  flex: 1;
+  padding: 7px 4px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--mid);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+.sd-obj-btn:hover { border-color: var(--gold); color: var(--dark); }
+.sd-obj-btn.danger { color: #cc2828; }
+.sd-obj-btn.danger:hover { border-color: #cc2828; background: #fff5f5; }
+.sd-object-controls.hidden { display: none; }
+
+/* ================================================================
+   CENTER — PREVIEW
+================================================================ */
+.sd-preview-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.sd-view-toggle {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+.sd-view-btn {
+  padding: 8px 24px;
+  background: transparent;
+  border: none;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: var(--mid);
+  transition: all 0.2s;
+}
+.sd-view-btn.active {
+  background: var(--dark);
+  color: var(--gold);
+}
+
+/* Shirt container */
+.sd-shirt-container {
+  position: relative;
+  width: 360px;
+  flex-shrink: 0;
+}
+.sd-shirt-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 6px 24px rgba(0,0,0,0.12));
+}
+
+/* Canvas overlays */
+.sd-canvas-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+}
+.sd-canvas-overlay.active { pointer-events: all; }
+.sd-canvas-overlay canvas {
+  display: block;
+}
+
+/* Print area highlight */
+.sd-print-area-hint {
+  position: absolute;
+  border: 1.5px dashed rgba(201,168,76,0.5);
+  border-radius: 4px;
+  pointer-events: none;
+  transition: all 0.3s;
+}
+
+/* Color name badge */
+.sd-color-badge {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 14px 5px 8px;
+  font-size: 0.78rem;
+  color: var(--mid);
+}
+.sd-color-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  flex-shrink: 0;
+}
+
+/* ================================================================
+   RIGHT PANEL — ORDER
+================================================================ */
+.sd-order-panel {
+  position: sticky;
+  top: 20px;
+}
+
+.sd-product-info { padding: 16px; }
+.sd-product-name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--dark);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 0 0 4px;
+}
+.sd-product-price {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gold);
+  font-family: 'Oswald', sans-serif;
+}
+.sd-product-desc {
+  font-size: 0.8rem;
+  color: var(--mid);
+  margin: 8px 0 0;
+  line-height: 1.6;
+}
+
+.sd-options { padding: 0 16px 16px; border-top: 1px solid var(--border); padding-top: 14px; }
+.sd-size-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.sd-size-btn {
+  padding: 6px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  background: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--mid);
+  transition: all 0.15s;
+  font-family: 'Roboto', sans-serif;
+}
+.sd-size-btn:hover { border-color: var(--gold); color: var(--dark); }
+.sd-size-btn.active {
+  background: var(--dark);
+  border-color: var(--dark);
+  color: var(--gold);
+}
+
+.sd-qty-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+.sd-qty-btn {
+  width: 32px; height: 32px;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  background: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s;
+  color: var(--dark);
+}
+.sd-qty-btn:hover { border-color: var(--gold); }
+.sd-qty-display {
+  font-size: 0.95rem;
+  font-weight: 700;
+  min-width: 24px;
+  text-align: center;
+}
+
+.sd-atc-section { padding: 0 16px 16px; }
+.sd-atc-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--gold);
+  color: var(--dark);
+  border: none;
+  border-radius: 8px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: 700;
+  transition: background 0.2s, transform 0.1s;
+  margin-bottom: 8px;
+}
+.sd-atc-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+.sd-atc-btn:active { transform: translateY(0); }
+.sd-atc-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.sd-atc-btn.loading { opacity: 0.7; }
+
+.sd-save-design-btn {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  color: var(--mid);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.sd-save-design-btn:hover { border-color: var(--gold); color: var(--dark); }
+
+.sd-notice {
+  background: #fffdf5;
+  border: 1px solid var(--gold-light);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 0.75rem;
+  color: var(--mid);
+  line-height: 1.5;
+  margin: 0 16px 16px;
+}
+.sd-notice strong { color: var(--dark); }
+
+/* Design summary chips */
+.sd-design-summary {
+  padding: 0 16px 14px;
+  border-top: 1px solid var(--border);
+}
+.sd-design-summary-title {
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--mid);
+  font-weight: 600;
+  margin: 12px 0 8px;
+}
+.sd-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  color: var(--mid);
+  margin: 3px 3px 0 0;
+}
+.sd-chip-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* ================================================================
+   SUCCESS TOAST
+================================================================ */
+.sd-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--dark);
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  border-left: 4px solid var(--gold);
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 9999;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.sd-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ================================================================
+   SIZE GUIDE MODAL
+================================================================ */
+.sd-no-size-msg {
+  font-size: 0.75rem;
+  color: #cc2828;
+  margin-top: 4px;
+  display: none;
+}
+.sd-no-size-msg.show { display: block; }
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+@media (max-width: 1024px) {
+  .sd-layout {
+    grid-template-columns: 240px 1fr 220px;
+    padding: 16px 12px;
+  }
+}
+
+@media (max-width: 860px) {
+  .sd-layout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .sd-tools,
+  .sd-order-panel { position: static; }
+  .sd-shirt-container { width: 300px; }
+  .sd-preview-wrap { padding: 0; }
+}
+
+@media (max-width: 480px) {
+  .sd-header h1 { font-size: 1.5rem; }
+  .sd-shirt-container { width: 100%; max-width: 300px; }
+}
+</style>
+
+<!-- ================================================================
+     HTML
+================================================================ -->
+<div class="sd-page">
+
+  <div class="sd-header">
+    <h1>Design Your Shirt</h1>
+    <p>CREATE · CUSTOMIZE · WEAR</p>
+  </div>
+
+  <div class="sd-layout">
+
+    <!-- ============================================================
+         LEFT PANEL — TOOLS
+    ============================================================ -->
+    <div class="sd-panel sd-tools" id="sdTools">
+
+      <!-- Placement -->
+      <div class="sd-panel-header">Print Placement</div>
+      <div class="sd-placement-grid">
+        <button class="sd-placement-btn active" data-placement="front" onclick="sdSetPlacement('front')">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="3" y="2" width="16" height="18" rx="2" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="7" y="7" width="8" height="8" rx="1" fill="currentColor" opacity="0.5"/>
+          </svg>
+          Front
+        </button>
+        <button class="sd-placement-btn" data-placement="back" onclick="sdSetPlacement('back')">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="3" y="2" width="16" height="18" rx="2" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="7" y="7" width="8" height="8" rx="1" fill="currentColor" opacity="0.3"/>
+            <text x="11" y="13" text-anchor="middle" font-size="5" fill="currentColor" opacity="0.7">B</text>
+          </svg>
+          Back
+        </button>
+        <button class="sd-placement-btn" data-placement="left-chest" onclick="sdSetPlacement('left-chest')">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="3" y="2" width="16" height="18" rx="2" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="5" y="6" width="5" height="5" rx="1" fill="currentColor" opacity="0.7"/>
+          </svg>
+          L. Chest
+        </button>
+      </div>
+
+      <!-- Shirt Color -->
+      <div class="sd-colors">
+        <div class="sd-colors-label">Shirt Color</div>
+        <div class="sd-swatch-grid" id="sdSwatches"></div>
+      </div>
+
+      <!-- Tool Tabs -->
+      <div class="sd-tool-tabs">
+        <button class="sd-tool-tab active" onclick="sdSwitchTool('text')">✏️ Text</button>
+        <button class="sd-tool-tab" onclick="sdSwitchTool('image')">🖼 Image</button>
+      </div>
+
+      <!-- TEXT TOOL -->
+      <div class="sd-tool-panel active" id="sdTextPanel">
+        <div class="sd-field-group">
+          <label class="sd-field-label">Text</label>
+          <input class="sd-input" id="sdTextInput" type="text" placeholder="Type your text…" maxlength="60">
+        </div>
+        <div class="sd-row">
+          <div class="sd-field-group">
+            <label class="sd-field-label">Font</label>
+            <select class="sd-select" id="sdFontSelect">
+              <option value="Oswald">Oswald</option>
+              <option value="Anton">Anton</option>
+              <option value="Bebas Neue">Bebas Neue</option>
+              <option value="Roboto">Roboto</option>
+              <option value="Playfair Display">Playfair</option>
+              <option value="Arial">Arial</option>
+              <option value="Impact">Impact</option>
+              <option value="Georgia">Georgia</option>
+            </select>
+          </div>
+          <div class="sd-field-group">
+            <label class="sd-field-label">Size</label>
+            <select class="sd-select" id="sdFontSize">
+              <option value="18">Small</option>
+              <option value="26" selected>Medium</option>
+              <option value="36">Large</option>
+              <option value="48">XL</option>
+              <option value="64">XXL</option>
+            </select>
+          </div>
+        </div>
+        <div class="sd-field-group">
+          <label class="sd-field-label">Text Color</label>
+          <div class="sd-color-row">
+            <input type="color" id="sdTextColorPicker" value="#000000" oninput="sdUpdateTextColor(this.value)">
+            <div class="sd-text-colors" id="sdTextColorSwatches"></div>
+          </div>
+        </div>
+        <div class="sd-field-group">
+          <label class="sd-field-label">Style</label>
+          <div style="display:flex;gap:6px;">
+            <button class="sd-obj-btn" id="sdBoldBtn" onclick="sdToggleBold()" title="Bold"><strong>B</strong></button>
+            <button class="sd-obj-btn" id="sdItalicBtn" onclick="sdToggleItalic()" title="Italic"><em>I</em></button>
+            <button class="sd-obj-btn" onclick="sdAlignText('left')" title="Align Left">⬅</button>
+            <button class="sd-obj-btn" onclick="sdAlignText('center')" title="Center">☰</button>
+            <button class="sd-obj-btn" onclick="sdAlignText('right')" title="Align Right">➡</button>
+          </div>
+        </div>
+        <button class="sd-btn-primary" onclick="sdAddText()">+ Add Text</button>
+      </div>
+
+      <!-- IMAGE TOOL -->
+      <div class="sd-tool-panel" id="sdImagePanel">
+        <div class="sd-upload-area" id="sdUploadArea" onclick="document.getElementById('sdFileInput').click()">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <p><strong>Click to upload</strong><br>PNG, JPG, SVG · Max 10MB</p>
+        </div>
+        <input type="file" id="sdFileInput" accept="image/*" style="display:none" onchange="sdHandleImageUpload(this)">
+        <p style="font-size:0.72rem;color:#888;text-align:center;margin:0 0 10px;line-height:1.5;">
+          Tip: Use a PNG with a transparent background for the cleanest result.
+        </p>
+        <button class="sd-btn-secondary" onclick="sdRemoveBackground()">✨ Remove Background</button>
+      </div>
+
+      <!-- Object Controls -->
+      <div class="sd-object-controls hidden" id="sdObjectControls">
+        <div class="sd-object-controls-title">Selected Object</div>
+        <div class="sd-object-btn-row">
+          <button class="sd-obj-btn" onclick="sdMoveForward()">↑ Fwd</button>
+          <button class="sd-obj-btn" onclick="sdMoveBackward()">↓ Back</button>
+          <button class="sd-obj-btn" onclick="sdDuplicateObject()">⎘ Copy</button>
+          <button class="sd-obj-btn danger" onclick="sdDeleteObject()">✕ Del</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================================
+         CENTER — SHIRT PREVIEW
+    ============================================================ -->
+    <div class="sd-preview-wrap">
+      <div class="sd-view-toggle">
+        <button class="sd-view-btn active" id="sdFrontViewBtn" onclick="sdSetView('front')">Front</button>
+        <button class="sd-view-btn" id="sdBackViewBtn" onclick="sdSetView('back')">Back</button>
+      </div>
+
+      <div class="sd-shirt-container" id="sdShirtContainer">
+        <!-- Shirt SVG (front) -->
+        <svg id="sdShirtFrontSvg" class="sd-shirt-svg" viewBox="0 0 400 465" xmlns="http://www.w3.org/2000/svg">
+          <!-- Main shirt body -->
+          <path id="sdShirtBody"
+            d="M 150 14 C 138 14 120 22 113 40 L 6 80 L 6 140 L 78 154 L 78 452 L 322 452 L 322 154 L 394 140 L 394 80 L 287 40 C 280 22 262 14 250 14 C 239 38 220 54 200 58 C 180 54 161 38 150 14 Z"
+            fill="#FFFFFF" stroke="#DDDDDD" stroke-width="2"/>
+          <!-- Shoulder seam lines -->
+          <path d="M 78 154 C 78 140 6 130 6 130" fill="none" stroke="#CCCCCC" stroke-width="1" opacity="0.6"/>
+          <path d="M 322 154 C 322 140 394 130 394 130" fill="none" stroke="#CCCCCC" stroke-width="1" opacity="0.6"/>
+          <!-- Collar inner shadow -->
+          <path d="M 150 14 C 161 38 180 54 200 58 C 220 54 239 38 250 14"
+            fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3"/>
+          <!-- Print area dashed guide (front) -->
+          <rect id="sdPrintAreaGuide" x="113" y="158" width="174" height="240"
+            fill="none" stroke="#C9A84C" stroke-width="1.2" stroke-dasharray="5,4" rx="3" opacity="0.5"/>
+        </svg>
+
+        <!-- Shirt SVG (back) — hidden by default -->
+        <svg id="sdShirtBackSvg" class="sd-shirt-svg" viewBox="0 0 400 465" xmlns="http://www.w3.org/2000/svg" style="display:none; position:absolute; top:0; left:0; width:100%;">
+          <!-- Same shape, no collar detail -->
+          <path id="sdShirtBodyBack"
+            d="M 150 14 C 138 14 120 22 113 40 L 6 80 L 6 140 L 78 154 L 78 452 L 322 452 L 322 154 L 394 140 L 394 80 L 287 40 C 280 22 262 14 250 14 C 248 18 244 22 240 25 L 200 28 L 160 25 C 156 22 152 18 150 14 Z"
+            fill="#FFFFFF" stroke="#DDDDDD" stroke-width="2"/>
+          <path d="M 78 154 C 78 140 6 130 6 130" fill="none" stroke="#CCCCCC" stroke-width="1" opacity="0.6"/>
+          <path d="M 322 154 C 322 140 394 130 394 130" fill="none" stroke="#CCCCCC" stroke-width="1" opacity="0.6"/>
+          <rect x="113" y="158" width="174" height="240"
+            fill="none" stroke="#C9A84C" stroke-width="1.2" stroke-dasharray="5,4" rx="3" opacity="0.5"/>
+          <text x="200" y="100" text-anchor="middle" font-family="Oswald,sans-serif" font-size="11" fill="#BBBBBB" letter-spacing="3">BACK</text>
+        </svg>
+
+        <!-- Canvas overlays — positioned via JS -->
+        <div class="sd-canvas-overlay active" id="sdCanvasFront">
+          <canvas id="canvasFront"></canvas>
+        </div>
+        <div class="sd-canvas-overlay" id="sdCanvasBack">
+          <canvas id="canvasBack"></canvas>
+        </div>
+        <div class="sd-canvas-overlay" id="sdCanvasLeftChest">
+          <canvas id="canvasLeftChest"></canvas>
+        </div>
+      </div>
+
+      <div class="sd-color-badge">
+        <span class="sd-color-dot" id="sdColorDot" style="background:#FFFFFF;border-color:#BBBBBB;"></span>
+        <span id="sdColorName">White</span>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         RIGHT PANEL — ORDER
+    ============================================================ -->
+    <div class="sd-panel sd-order-panel">
+      <div class="sd-panel-header">Your Order</div>
+
+      <div class="sd-product-info">
+        <div class="sd-product-name">{{ design_product.title | default: 'Custom Classic Tee' }}</div>
+        <div class="sd-product-price" id="sdPrice">
+          {%- if design_product != empty -%}
+            {{ design_product.price | money }}
+          {%- else -%}
+            $29.99
+          {%- endif -%}
+        </div>
+        <div class="sd-product-desc">{{ design_product.description | strip_html | truncate: 120 | default: 'Premium quality custom printed tee. Your design, your way.' }}</div>
+      </div>
+
+      <!-- Size -->
+      <div class="sd-options">
+        <div class="sd-field-label">Size</div>
+        <div class="sd-size-grid" id="sdSizeGrid">
+          {%- if design_product != empty -%}
+            {%- for variant in design_product.variants -%}
+              <button class="sd-size-btn{% if forloop.first %} active{% endif %}"
+                data-variant-id="{{ variant.id }}"
+                data-size="{{ variant.title }}"
+                data-available="{{ variant.available }}"
+                onclick="sdSelectSize(this)">
+                {{ variant.title }}
+              </button>
+            {%- endfor -%}
+          {%- else -%}
+            <button class="sd-size-btn active" data-variant-id="" data-size="S" onclick="sdSelectSize(this)">S</button>
+            <button class="sd-size-btn" data-variant-id="" data-size="M" onclick="sdSelectSize(this)">M</button>
+            <button class="sd-size-btn" data-variant-id="" data-size="L" onclick="sdSelectSize(this)">L</button>
+            <button class="sd-size-btn" data-variant-id="" data-size="XL" onclick="sdSelectSize(this)">XL</button>
+            <button class="sd-size-btn" data-variant-id="" data-size="XXL" onclick="sdSelectSize(this)">XXL</button>
+          {%- endif -%}
+        </div>
+        <div class="sd-no-size-msg" id="sdNoSizeMsg">Please select a size before adding to cart.</div>
+
+        <!-- Quantity -->
+        <div class="sd-field-label" style="margin-top:14px;">Quantity</div>
+        <div class="sd-qty-row">
+          <button class="sd-qty-btn" onclick="sdQtyChange(-1)">−</button>
+          <span class="sd-qty-display" id="sdQtyDisplay">1</span>
+          <button class="sd-qty-btn" onclick="sdQtyChange(1)">+</button>
+        </div>
+      </div>
+
+      <!-- Design Summary -->
+      <div class="sd-design-summary">
+        <div class="sd-design-summary-title">Design Summary</div>
+        <div id="sdDesignChips">
+          <span class="sd-chip"><span class="sd-chip-dot"></span>No design yet</span>
+        </div>
+      </div>
+
+      <!-- Add to Cart -->
+      <div class="sd-atc-section">
+        <button class="sd-atc-btn" id="sdAtcBtn" onclick="sdAddToCart()">
+          Add to Cart
+        </button>
+        <button class="sd-save-design-btn" onclick="sdDownloadDesign()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Save Design Proof
+        </button>
+      </div>
+
+      <div class="sd-notice">
+        <strong>Note:</strong> After placing your order, email your design proof to
+        <strong>{{ shop.email | default: 'hello@customizedteez.com' }}</strong>
+        for fastest processing.
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="sd-toast" id="sdToast"></div>
+
+<!-- ================================================================
+     JAVASCRIPT
+================================================================ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js" crossorigin="anonymous"></script>
+<script>
+(function() {
+'use strict';
+
+// ----------------------------------------------------------------
+// CONFIG
+// ----------------------------------------------------------------
+var SHIRT_VIEWBOX_W = 400;
+var SHIRT_VIEWBOX_H = 465;
+
+var PLACEMENT_CONFIG = {
+  'front': {
+    view: 'front',
+    svgX: 113, svgY: 158, svgW: 174, svgH: 240,
+    label: 'Full Front'
+  },
+  'back': {
+    view: 'back',
+    svgX: 113, svgY: 158, svgW: 174, svgH: 240,
+    label: 'Full Back'
+  },
+  'left-chest': {
+    view: 'front',
+    svgX: 113, svgY: 158, svgW: 80, svgH: 85,
+    label: 'Left Chest'
+  }
+};
+
+var SHIRT_COLORS = [
+  { name: 'White',   hex: '#FFFFFF', border: '#BBBBBB' },
+  { name: 'Black',   hex: '#1A1A1A', border: '#000000' },
+  { name: 'Navy',    hex: '#1B3A6B', border: '#0F2248' },
+  { name: 'Red',     hex: '#CC2828', border: '#AA1F1F' },
+  { name: 'Forest',  hex: '#2D5A27', border: '#1E3C1A' },
+  { name: 'Royal',   hex: '#1E4ED8', border: '#1539A8' },
+  { name: 'Charcoal',hex: '#4B5563', border: '#374151' },
+  { name: 'Gold',    hex: '#C9A84C', border: '#A8883C' }
+];
+
+var TEXT_COLORS = [
+  '#000000','#FFFFFF','#C9A84C','#CC2828','#1B3A6B','#2D5A27','#FF6B00','#9C27B0'
+];
+
+// ----------------------------------------------------------------
+// STATE
+// ----------------------------------------------------------------
+var state = {
+  shirtColor: '#FFFFFF',
+  shirtColorName: 'White',
+  placement: 'front',
+  currentView: 'front',
+  qty: 1,
+  selectedVariantId: null,
+  selectedSize: null,
+  isBold: false,
+  isItalic: false
+};
+
+// Fabric.js canvas instances (keyed by placement)
+var fabricCanvases = {};
+var containerDims = { w: 360, h: 418 }; // defaults, recalculated on init
+
+// ----------------------------------------------------------------
+// INIT
+// ----------------------------------------------------------------
+window.addEventListener('DOMContentLoaded', function() {
+  buildSwatches();
+  buildTextColorSwatches();
+  measureAndInitCanvases();
+  // Set first variant
+  var firstSize = document.querySelector('.sd-size-btn');
+  if (firstSize) sdSelectSize(firstSize);
+
+  // Drag-over styling for upload
+  var area = document.getElementById('sdUploadArea');
+  area.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    area.style.borderColor = '#C9A84C';
+    area.style.background = '#fffdf5';
+  });
+  area.addEventListener('dragleave', function() {
+    area.style.borderColor = '';
+    area.style.background = '';
+  });
+  area.addEventListener('drop', function(e) {
+    e.preventDefault();
+    area.style.borderColor = '';
+    var file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) processImageFile(file);
+  });
+
+  window.addEventListener('resize', debounce(function() {
+    measureAndInitCanvases();
+  }, 300));
+});
+
+function measureAndInitCanvases() {
+  var container = document.getElementById('sdShirtContainer');
+  var cw = container.offsetWidth || 360;
+  var ch = Math.round(cw * (SHIRT_VIEWBOX_H / SHIRT_VIEWBOX_W));
+  containerDims = { w: cw, h: ch };
+  initCanvas('front');
+  initCanvas('back');
+  initCanvas('left-chest');
+  positionCanvasOverlays();
+  updatePrintAreaGuide();
+}
+
+function getCanvasDims(placement) {
+  var cfg = PLACEMENT_CONFIG[placement];
+  var scaleX = containerDims.w / SHIRT_VIEWBOX_W;
+  var scaleY = containerDims.h / SHIRT_VIEWBOX_H;
+  return {
+    left: Math.round(cfg.svgX * scaleX),
+    top:  Math.round(cfg.svgY * scaleY),
+    w:    Math.round(cfg.svgW * scaleX),
+    h:    Math.round(cfg.svgH * scaleY)
+  };
+}
+
+function initCanvas(placement) {
+  var canvasId = canvasElId(placement);
+  var dims = getCanvasDims(placement);
+
+  if (fabricCanvases[placement]) {
+    // Resize existing canvas
+    var fc = fabricCanvases[placement];
+    fc.setWidth(dims.w);
+    fc.setHeight(dims.h);
+    fc.renderAll();
+  } else {
+    // Create new Fabric canvas
+    var fc = new fabric.Canvas(canvasId, {
+      width: dims.w,
+      height: dims.h,
+      backgroundColor: 'transparent',
+      selection: true
+    });
+    fabricCanvases[placement] = fc;
+
+    // Event listeners
+    fc.on('selection:created', onObjectSelected);
+    fc.on('selection:updated', onObjectSelected);
+    fc.on('selection:cleared', onObjectDeselected);
+    fc.on('object:modified', updateDesignSummary);
+    fc.on('object:added', updateDesignSummary);
+    fc.on('object:removed', updateDesignSummary);
+  }
+  positionCanvasOverlays();
+}
+
+function canvasElId(placement) {
+  if (placement === 'front') return 'canvasFront';
+  if (placement === 'back') return 'canvasBack';
+  return 'canvasLeftChest';
+}
+
+function canvasWrapperId(placement) {
+  if (placement === 'front') return 'sdCanvasFront';
+  if (placement === 'back') return 'sdCanvasBack';
+  return 'sdCanvasLeftChest';
+}
+
+function positionCanvasOverlays() {
+  ['front','back','left-chest'].forEach(function(pl) {
+    var dims = getCanvasDims(pl);
+    var wrapper = document.getElementById(canvasWrapperId(pl));
+    wrapper.style.position = 'absolute';
+    wrapper.style.left = dims.left + 'px';
+    wrapper.style.top = dims.top + 'px';
+    wrapper.style.width = dims.w + 'px';
+    wrapper.style.height = dims.h + 'px';
+  });
+}
+
+// ----------------------------------------------------------------
+// SWATCHES
+// ----------------------------------------------------------------
+function buildSwatches() {
+  var grid = document.getElementById('sdSwatches');
+  SHIRT_COLORS.forEach(function(c) {
+    var btn = document.createElement('button');
+    btn.className = 'sd-swatch' + (c.hex === '#FFFFFF' ? ' active' : '');
+    btn.style.background = c.hex;
+    btn.style.borderColor = c.border;
+    btn.title = c.name;
+    btn.onclick = function() { sdSetShirtColor(c.hex, c.name, btn); };
+    grid.appendChild(btn);
+  });
+}
+
+function buildTextColorSwatches() {
+  var wrap = document.getElementById('sdTextColorSwatches');
+  TEXT_COLORS.forEach(function(hex) {
+    var s = document.createElement('button');
+    s.className = 'sd-text-color-swatch' + (hex === '#000000' ? ' active' : '');
+    s.style.background = hex;
+    if (hex === '#FFFFFF') s.style.border = '2px solid #CCCCCC';
+    s.title = hex;
+    s.onclick = function() {
+      document.querySelectorAll('.sd-text-color-swatch').forEach(function(x){ x.classList.remove('active'); });
+      s.classList.add('active');
+      document.getElementById('sdTextColorPicker').value = hex;
+      sdUpdateTextColor(hex);
+    };
+    wrap.appendChild(s);
+  });
+}
+
+// ----------------------------------------------------------------
+// SHIRT COLOR
+// ----------------------------------------------------------------
+window.sdSetShirtColor = function(hex, name, btn) {
+  state.shirtColor = hex;
+  state.shirtColorName = name;
+  document.getElementById('sdShirtBody').setAttribute('fill', hex);
+  document.getElementById('sdShirtBodyBack').setAttribute('fill', hex);
+  document.getElementById('sdColorDot').style.background = hex;
+  document.getElementById('sdColorDot').style.borderColor = hex === '#FFFFFF' ? '#BBBBBB' : hex;
+  document.getElementById('sdColorName').textContent = name;
+  document.querySelectorAll('.sd-swatch').forEach(function(s){ s.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  updateDesignSummary();
+};
+
+// ----------------------------------------------------------------
+// PLACEMENT
+// ----------------------------------------------------------------
+window.sdSetPlacement = function(placement) {
+  state.placement = placement;
+  document.querySelectorAll('.sd-placement-btn').forEach(function(b){
+    b.classList.toggle('active', b.dataset.placement === placement);
+  });
+  // Switch view if needed
+  var targetView = PLACEMENT_CONFIG[placement].view;
+  if (state.currentView !== targetView) sdSetView(targetView);
+  // Activate correct canvas overlay
+  updateActiveCanvas();
+  updatePrintAreaGuide();
+};
+
+function updateActiveCanvas() {
+  var pl = state.placement;
+  ['front','back','left-chest'].forEach(function(p) {
+    var wrapper = document.getElementById(canvasWrapperId(p));
+    var isActive = (p === pl);
+    wrapper.classList.toggle('active', isActive);
+    if (fabricCanvases[p]) fabricCanvases[p].selection = isActive;
+  });
+}
+
+function updatePrintAreaGuide() {
+  var cfg = PLACEMENT_CONFIG[state.placement];
+  var guide = document.getElementById('sdPrintAreaGuide');
+  if (guide) {
+    guide.setAttribute('x', cfg.svgX);
+    guide.setAttribute('y', cfg.svgY);
+    guide.setAttribute('width', cfg.svgW);
+    guide.setAttribute('height', cfg.svgH);
+  }
+}
+
+// ----------------------------------------------------------------
+// VIEW TOGGLE (Front / Back)
+// ----------------------------------------------------------------
+window.sdSetView = function(view) {
+  state.currentView = view;
+  document.getElementById('sdFrontViewBtn').classList.toggle('active', view === 'front');
+  document.getElementById('sdBackViewBtn').classList.toggle('active', view === 'back');
+  document.getElementById('sdShirtFrontSvg').style.display = view === 'front' ? 'block' : 'none';
+  document.getElementById('sdShirtBackSvg').style.display = view === 'back' ? 'block' : 'none';
+
+  // Show/hide canvas overlays based on view
+  ['front','left-chest'].forEach(function(p) {
+    document.getElementById(canvasWrapperId(p)).style.display = view === 'front' ? '' : 'none';
+  });
+  document.getElementById(canvasWrapperId('back')).style.display = view === 'back' ? '' : 'none';
+};
+
+// ----------------------------------------------------------------
+// TOOL SWITCHING
+// ----------------------------------------------------------------
+window.sdSwitchTool = function(tool) {
+  document.querySelectorAll('.sd-tool-tab').forEach(function(t, i) {
+    t.classList.toggle('active', (i === 0 && tool === 'text') || (i === 1 && tool === 'image'));
+  });
+  document.getElementById('sdTextPanel').classList.toggle('active', tool === 'text');
+  document.getElementById('sdImagePanel').classList.toggle('active', tool === 'image');
+};
+
+// ----------------------------------------------------------------
+// TEXT TOOL
+// ----------------------------------------------------------------
+window.sdAddText = function() {
+  var text = document.getElementById('sdTextInput').value.trim();
+  if (!text) { sdShowToast('Please enter some text first.'); return; }
+  var font = document.getElementById('sdFontSelect').value;
+  var size = parseInt(document.getElementById('sdFontSize').value, 10);
+  var color = document.getElementById('sdTextColorPicker').value;
+  var canvas = getActiveCanvas();
+  var t = new fabric.IText(text, {
+    left: canvas.width / 2,
+    top: canvas.height / 2,
+    originX: 'center',
+    originY: 'center',
+    fontSize: size,
+    fontFamily: font,
+    fill: color,
+    fontWeight: state.isBold ? 'bold' : 'normal',
+    fontStyle: state.isItalic ? 'italic' : 'normal',
+    textAlign: 'center',
+    editable: true
+  });
+  canvas.add(t);
+  canvas.setActiveObject(t);
+  canvas.renderAll();
+  document.getElementById('sdTextInput').value = '';
+};
+
+window.sdUpdateTextColor = function(hex) {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (obj && obj.type === 'i-text') {
+    obj.set('fill', hex);
+    canvas.renderAll();
+  }
+};
+
+window.sdToggleBold = function() {
+  state.isBold = !state.isBold;
+  document.getElementById('sdBoldBtn').style.background = state.isBold ? '#1A1A1A' : '';
+  document.getElementById('sdBoldBtn').style.color = state.isBold ? '#C9A84C' : '';
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (obj && obj.type === 'i-text') {
+    obj.set('fontWeight', state.isBold ? 'bold' : 'normal');
+    canvas.renderAll();
+  }
+};
+
+window.sdToggleItalic = function() {
+  state.isItalic = !state.isItalic;
+  document.getElementById('sdItalicBtn').style.background = state.isItalic ? '#1A1A1A' : '';
+  document.getElementById('sdItalicBtn').style.color = state.isItalic ? '#C9A84C' : '';
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (obj && obj.type === 'i-text') {
+    obj.set('fontStyle', state.isItalic ? 'italic' : 'normal');
+    canvas.renderAll();
+  }
+};
+
+window.sdAlignText = function(align) {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (obj && obj.type === 'i-text') {
+    obj.set('textAlign', align);
+    canvas.renderAll();
+  }
+};
+
+// ----------------------------------------------------------------
+// IMAGE TOOL
+// ----------------------------------------------------------------
+window.sdHandleImageUpload = function(input) {
+  if (!input.files || !input.files[0]) return;
+  processImageFile(input.files[0]);
+};
+
+function processImageFile(file) {
+  if (file.size > 10 * 1024 * 1024) { sdShowToast('Image too large. Max 10MB.'); return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    fabric.Image.fromURL(e.target.result, function(img) {
+      var canvas = getActiveCanvas();
+      var maxW = canvas.width * 0.9;
+      var maxH = canvas.height * 0.9;
+      var scale = Math.min(maxW / img.width, maxH / img.height, 1);
+      img.set({
+        scaleX: scale,
+        scaleY: scale,
+        left: canvas.width / 2,
+        top: canvas.height / 2,
+        originX: 'center',
+        originY: 'center'
+      });
+      canvas.add(img);
+      canvas.setActiveObject(img);
+      canvas.renderAll();
+    });
+  };
+  reader.readAsDataURL(file);
+}
+
+window.sdRemoveBackground = function() {
+  sdShowToast('Tip: Use remove.bg or Canva to remove your image background first, then upload the PNG.');
+};
+
+// ----------------------------------------------------------------
+// OBJECT CONTROLS
+// ----------------------------------------------------------------
+function onObjectSelected() {
+  document.getElementById('sdObjectControls').classList.remove('hidden');
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (obj && obj.type === 'i-text') {
+    // Sync text tool UI
+    document.getElementById('sdFontSelect').value = obj.fontFamily || 'Roboto';
+    document.getElementById('sdTextColorPicker').value = obj.fill || '#000000';
+    state.isBold = obj.fontWeight === 'bold';
+    state.isItalic = obj.fontStyle === 'italic';
+  }
+}
+
+function onObjectDeselected() {
+  document.getElementById('sdObjectControls').classList.add('hidden');
+}
+
+window.sdMoveForward = function() {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (obj) { canvas.bringForward(obj); canvas.renderAll(); }
+};
+
+window.sdMoveBackward = function() {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (obj) { canvas.sendBackwards(obj); canvas.renderAll(); }
+};
+
+window.sdDuplicateObject = function() {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (!obj) return;
+  obj.clone(function(clone) {
+    clone.set({ left: obj.left + 16, top: obj.top + 16 });
+    canvas.add(clone);
+    canvas.setActiveObject(clone);
+    canvas.renderAll();
+  });
+};
+
+window.sdDeleteObject = function() {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (obj) { canvas.remove(obj); canvas.renderAll(); }
+};
+
+// Keyboard delete
+document.addEventListener('keydown', function(e) {
+  if ((e.key === 'Delete' || e.key === 'Backspace') && e.target === document.body) {
+    var canvas = getActiveCanvas();
+    var obj = canvas.getActiveObject();
+    if (obj && obj.type !== 'i-text') { canvas.remove(obj); canvas.renderAll(); }
+  }
+});
+
+// ----------------------------------------------------------------
+// SIZE + QTY
+// ----------------------------------------------------------------
+window.sdSelectSize = function(btn) {
+  document.querySelectorAll('.sd-size-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  state.selectedVariantId = btn.dataset.variantId || null;
+  state.selectedSize = btn.dataset.size;
+  document.getElementById('sdNoSizeMsg').classList.remove('show');
+};
+
+window.sdQtyChange = function(delta) {
+  state.qty = Math.max(1, Math.min(99, state.qty + delta));
+  document.getElementById('sdQtyDisplay').textContent = state.qty;
+};
+
+// ----------------------------------------------------------------
+// DESIGN SUMMARY
+// ----------------------------------------------------------------
+function updateDesignSummary() {
+  var chips = [];
+  chips.push('<span class="sd-chip"><span class="sd-chip-dot" style="background:' + state.shirtColor + ';border:1px solid #ccc;"></span>' + state.shirtColorName + '</span>');
+
+  // Check each canvas for objects
+  var placements = { front: 'Front', back: 'Back', 'left-chest': 'L. Chest' };
+  Object.keys(placements).forEach(function(pl) {
+    var fc = fabricCanvases[pl];
+    if (fc && fc.getObjects().length > 0) {
+      chips.push('<span class="sd-chip"><span class="sd-chip-dot"></span>' + placements[pl] + ' (' + fc.getObjects().length + ' element' + (fc.getObjects().length > 1 ? 's' : '') + ')</span>');
+    }
+  });
+
+  document.getElementById('sdDesignChips').innerHTML = chips.join('');
+}
+
+// ----------------------------------------------------------------
+// ADD TO CART
+// ----------------------------------------------------------------
+window.sdAddToCart = function() {
+  if (!state.selectedSize) {
+    document.getElementById('sdNoSizeMsg').classList.add('show');
+    return;
+  }
+
+  // Check if any canvas has content
+  var hasDesign = Object.values(fabricCanvases).some(function(fc) {
+    return fc && fc.getObjects().length > 0;
+  });
+
+  if (!hasDesign) {
+    sdShowToast('Add some text or an image to your shirt first!');
+    return;
+  }
+
+  var btn = document.getElementById('sdAtcBtn');
+  btn.textContent = 'Adding…';
+  btn.disabled = true;
+  btn.classList.add('loading');
+
+  // Build line item properties
+  var properties = {};
+  properties['Shirt Color'] = state.shirtColorName;
+  properties['Print Placement'] = PLACEMENT_CONFIG[state.placement].label;
+  properties['Size'] = state.selectedSize;
+
+  // Gather text elements
+  var textCount = 0;
+  ['front','back','left-chest'].forEach(function(pl) {
+    var fc = fabricCanvases[pl];
+    if (!fc) return;
+    fc.getObjects().forEach(function(obj) {
+      if (obj.type === 'i-text') {
+        textCount++;
+        properties['Text ' + textCount + ' (' + pl + ')'] = obj.text;
+        properties['Text ' + textCount + ' Font'] = obj.fontFamily;
+        properties['Text ' + textCount + ' Color'] = obj.fill;
+      } else if (obj.type === 'image') {
+        properties['Custom Image (' + pl + ')'] = 'Uploaded — see design proof';
+      }
+    });
+  });
+
+  properties['_Note'] = 'Custom design order — customer to provide design proof via email';
+
+  var variantId = state.selectedVariantId;
+  if (!variantId) {
+    sdShowToast('Product variant not found. Please contact us directly.');
+    resetAtcBtn();
+    return;
+  }
+
+  fetch('/cart/add.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+    body: JSON.stringify({
+      items: [{
+        id: parseInt(variantId, 10),
+        quantity: state.qty,
+        properties: properties
+      }]
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.status && data.status !== 200) {
+      sdShowToast(data.description || 'Could not add to cart. Please try again.');
+    } else {
+      sdShowToast('Added to cart! Download your design proof below.');
+      sdDownloadDesign(true);
+      setTimeout(function() { window.location.href = '/cart'; }, 1800);
+    }
+    resetAtcBtn();
+  })
+  .catch(function() {
+    sdShowToast('Something went wrong. Please try again.');
+    resetAtcBtn();
+  });
+};
+
+function resetAtcBtn() {
+  var btn = document.getElementById('sdAtcBtn');
+  btn.textContent = 'Add to Cart';
+  btn.disabled = false;
+  btn.classList.remove('loading');
+}
+
+// ----------------------------------------------------------------
+// DOWNLOAD DESIGN PROOF
+// ----------------------------------------------------------------
+window.sdDownloadDesign = function(silent) {
+  // Composite: shirt SVG + all active canvases into one image
+  var svgEl = state.currentView === 'front'
+    ? document.getElementById('sdShirtFrontSvg')
+    : document.getElementById('sdShirtBackSvg');
+
+  var svgData = new XMLSerializer().serializeToString(svgEl);
+  var svgBlob = new Blob([svgData], { type: 'image/svg+xml' });
+  var svgUrl = URL.createObjectURL(svgBlob);
+
+  var compositeCanvas = document.createElement('canvas');
+  var scale = 2; // retina
+  compositeCanvas.width = containerDims.w * scale;
+  compositeCanvas.height = containerDims.h * scale;
+  var ctx = compositeCanvas.getContext('2d');
+  ctx.scale(scale, scale);
+
+  var img = new Image();
+  img.onload = function() {
+    ctx.drawImage(img, 0, 0, containerDims.w, containerDims.h);
+    URL.revokeObjectURL(svgUrl);
+
+    // Draw each fabric canvas
+    ['front','back','left-chest'].forEach(function(pl) {
+      var cfg = PLACEMENT_CONFIG[pl];
+      var fc = fabricCanvases[pl];
+      if (!fc || fc.getObjects().length === 0) return;
+      var dims = getCanvasDims(pl);
+      var dataUrl = fc.toDataURL({ format: 'png', multiplier: 2 });
+      var cImg = new Image();
+      cImg.onload = function() {
+        ctx.drawImage(cImg, dims.left, dims.top, dims.w, dims.h);
+        // After all drawn, trigger download
+        finishDownload();
+      };
+      cImg.src = dataUrl;
+    });
+
+    // If no canvases have objects, download shirt only
+    var anyObjects = Object.values(fabricCanvases).some(function(fc) {
+      return fc && fc.getObjects().length > 0;
+    });
+    if (!anyObjects) finishDownload();
+
+    function finishDownload() {
+      var link = document.createElement('a');
+      link.download = 'customizedteez-design-proof.png';
+      link.href = compositeCanvas.toDataURL('image/png');
+      if (!silent) link.click();
+    }
+  };
+  img.src = svgUrl;
+};
+
+// ----------------------------------------------------------------
+// HELPERS
+// ----------------------------------------------------------------
+function getActiveCanvas() {
+  return fabricCanvases[state.placement];
+}
+
+function sdShowToast(msg) {
+  var toast = document.getElementById('sdToast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 3500);
+}
+
+function debounce(fn, delay) {
+  var timer;
+  return function() {
+    clearTimeout(timer);
+    timer = setTimeout(fn, delay);
+  };
+}
+
+})();
+</script>

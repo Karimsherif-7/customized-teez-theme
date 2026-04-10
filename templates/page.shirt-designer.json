@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "shirt_designer": {
+      "type": "shirt-designer",
+      "settings": {}
+    }
+  },
+  "order": ["shirt_designer"]
+}
