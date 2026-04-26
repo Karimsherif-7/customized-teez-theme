@@ -986,6 +986,105 @@
 }
 .ct-cat-card:hover .ct-cat-arrow { opacity: 1; transform: scale(1); }
 
+/* ── SHOP BY VIBE ── */
+.ct-vibes { background: var(--bg-primary); }
+.ct-vibe-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 14px;
+  min-height: 560px;
+}
+.ct-vibe-card {
+  position: relative;
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--text-inverse);
+  transition: transform .35s ease, box-shadow .35s ease;
+  isolation: isolate;
+}
+.ct-vibe-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.18), transparent 60%);
+  z-index: 0;
+}
+.ct-vibe-card::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.55) 100%);
+  z-index: 0;
+}
+.ct-vibe-card:hover { transform: translateY(-6px); box-shadow: 0 12px 36px rgba(0,0,0,.25); }
+.ct-vibe-card:focus-visible { outline: 3px solid var(--accent-primary); outline-offset: 4px; }
+.ct-vibe-inner {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 28px;
+}
+.ct-vibe-emoji {
+  position: absolute;
+  top: 22px; right: 24px;
+  font-size: 56px;
+  line-height: 1;
+  opacity: .85;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,.25));
+  transition: transform .35s ease;
+}
+.ct-vibe-card:hover .ct-vibe-emoji { transform: rotate(-6deg) scale(1.08); }
+.ct-vibe-name {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4vw, 64px);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  font-weight: var(--font-bold);
+  line-height: 1;
+  margin: 0 0 10px;
+  color: #fff;
+}
+.ct-vibe-desc {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: rgba(255,255,255,.86);
+  margin: 0 0 18px;
+  max-width: 32ch;
+}
+.ct-vibe-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+/* Card backgrounds — gradient-only, image-free */
+.ct-vibe-couples { grid-column: span 1; grid-row: span 2; background: linear-gradient(135deg, #d63384 0%, #6f42c1 100%); }
+.ct-vibe-rappers { background: linear-gradient(135deg, #1a1a1a 0%, #c9a84c 100%); }
+.ct-vibe-anime   { background: linear-gradient(135deg, #ff6b9d 0%, #5b4ce0 100%); }
+.ct-vibe-cartoon { background: linear-gradient(135deg, #ffb24c 0%, #e8472b 100%); }
+.ct-vibe-kids    { background: linear-gradient(135deg, #4cc9f0 0%, #2d5fb6 100%); }
+.ct-vibe-couples .ct-vibe-name { font-size: clamp(48px, 6vw, 96px); }
+
+@media (max-width: 960px) {
+  .ct-vibe-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; min-height: 0; }
+  .ct-vibe-couples { grid-column: span 2; grid-row: span 1; min-height: 280px; }
+  .ct-vibe-card { min-height: 220px; }
+}
+@media (max-width: 480px) {
+  .ct-vibe-grid { grid-template-columns: 1fr; }
+  .ct-vibe-couples { grid-column: span 1; }
+}
+
 /* ── HOW IT WORKS ── */
 .ct-hiw { background: var(--bg-primary); }
 .ct-hiw-header { text-align: center; margin-bottom: 72px; }
@@ -2288,6 +2387,7 @@
       <a href="/collections/all?filter.p.product_type=Sweatshirts">Sweatshirts</a>
       <a href="/collections/shorts?filter.p.product_type=Bottoms">Bottoms</a>
       <a href="/collections/College?filter.p.product_type=College">College</a>
+      <a href="#ct-vibes">Vibes</a>
     </div>
 
     <div class="ct-nav-actions">
@@ -2468,6 +2568,59 @@
       <a href="/products/custom-crop-tee" class="ct-prod-card ct-reveal ct-d3">
         <div class="ct-prod-img"><div class="ct-prod-img-inner">{%- assign prod4 = all_products['custom-crop-tee'] -%}{%- if prod4.featured_image -%}{{ prod4.featured_image | image_url: width: 600 | image_tag: alt: prod4.title, loading: 'lazy', sizes: '(max-width: 960px) 50vw, 25vw' }}{%- else -%}<span class="ct-prod-img-hint">Crop Tee Image</span>{%- endif -%}</div><a class="ct-prod-overlay" href="/pages/shirt-designer" aria-label="Customize this product"><span class="ct-prod-overlay-btn">Customize This</span></a></div>
         <div class="ct-prod-info"><span class="ct-prod-badge">Limited</span><div class="ct-prod-name">Custom Crop Tee</div><div class="ct-prod-colors" role="list" aria-label="Available colors"><span class="ct-swatch" role="listitem" aria-label="Black" style="background:#111"></span><span class="ct-swatch" role="listitem" aria-label="Crimson" style="background:#8b1c1c"></span><span class="ct-swatch" role="listitem" aria-label="Forest Green" style="background:#2d5a2d"></span></div><div><span class="ct-prod-price">$29</span><span class="ct-prod-price-orig">$38</span></div></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- SHOP BY VIBE / READY-MADE COLLECTIONS -->
+  <section class="ct-section ct-vibes" id="ct-vibes" aria-labelledby="ct-vibes-title">
+    <div class="ct-section-header-row">
+      <div>
+        <div class="ct-section-tag ct-reveal">Ready-Made Designs</div>
+        <h2 id="ct-vibes-title" class="ct-section-title ct-reveal ct-d1">Shop<br>By Vibe</h2>
+      </div>
+      <a href="/collections/all?filter.p.tag=ready-made" class="ct-view-all ct-reveal ct-d2" aria-label="View all ready-made designs">View All &rarr;</a>
+    </div>
+    <div class="ct-vibe-grid" role="list">
+      <a href="/collections/all?filter.p.product_type=Couples" class="ct-vibe-card ct-vibe-couples ct-reveal" role="listitem" aria-label="Shop Couples designs">
+        <div class="ct-vibe-inner">
+          <span class="ct-vibe-emoji" aria-hidden="true">&#128150;</span>
+          <h3 class="ct-vibe-name">Couples</h3>
+          <p class="ct-vibe-desc">Matching sets, anniversaries, date night.</p>
+          <span class="ct-vibe-cta">Shop Couples &rarr;</span>
+        </div>
+      </a>
+      <a href="/collections/all?filter.p.product_type=Rappers" class="ct-vibe-card ct-vibe-rappers ct-reveal ct-d1" role="listitem" aria-label="Shop Rappers designs">
+        <div class="ct-vibe-inner">
+          <span class="ct-vibe-emoji" aria-hidden="true">&#127908;</span>
+          <h3 class="ct-vibe-name">Rappers</h3>
+          <p class="ct-vibe-desc">Hip-hop heritage, boomboxes, gold chains.</p>
+          <span class="ct-vibe-cta">Shop Rappers &rarr;</span>
+        </div>
+      </a>
+      <a href="/collections/all?filter.p.product_type=Anime" class="ct-vibe-card ct-vibe-anime ct-reveal ct-d2" role="listitem" aria-label="Shop Anime designs">
+        <div class="ct-vibe-inner">
+          <span class="ct-vibe-emoji" aria-hidden="true">&#127888;</span>
+          <h3 class="ct-vibe-name">Anime</h3>
+          <p class="ct-vibe-desc">Manga panels, samurai, sakura, kanji.</p>
+          <span class="ct-vibe-cta">Shop Anime &rarr;</span>
+        </div>
+      </a>
+      <a href="/collections/all?filter.p.product_type=Cartoon" class="ct-vibe-card ct-vibe-cartoon ct-reveal ct-d3" role="listitem" aria-label="Shop Cartoon designs">
+        <div class="ct-vibe-inner">
+          <span class="ct-vibe-emoji" aria-hidden="true">&#127912;</span>
+          <h3 class="ct-vibe-name">Cartoon</h3>
+          <p class="ct-vibe-desc">Retro 90s, comic strips, halftone mascots.</p>
+          <span class="ct-vibe-cta">Shop Cartoon &rarr;</span>
+        </div>
+      </a>
+      <a href="/collections/all?filter.p.product_type=Kids" class="ct-vibe-card ct-vibe-kids ct-reveal ct-d4" role="listitem" aria-label="Shop Kids designs">
+        <div class="ct-vibe-inner">
+          <span class="ct-vibe-emoji" aria-hidden="true">&#129422;</span>
+          <h3 class="ct-vibe-name">Kids</h3>
+          <p class="ct-vibe-desc">Dinos, astronauts, sharks, robots.</p>
+          <span class="ct-vibe-cta">Shop Kids &rarr;</span>
+        </div>
       </a>
     </div>
   </section>
