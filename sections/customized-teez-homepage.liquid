@@ -2371,9 +2371,238 @@
     }
   }
 }
+
+/* ─────────────────────────────────────────────────────────
+   EXTRA ANIMATIONS — keep it lively without being noisy
+   ───────────────────────────────────────────────────────── */
+
+/* Top scroll-progress bar */
+.ct-scroll-progress {
+  position: fixed; top: 0; left: 0;
+  height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--accent-primary), #e8c46a);
+  z-index: 10001;
+  transition: width 0.1s ease-out;
+  pointer-events: none;
+  box-shadow: 0 0 12px rgba(201,168,76,0.5);
+}
+
+/* Reveal-on-scroll (used by .ct-reveal already) — make entrance crisper */
+.ct-reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1); }
+.ct-reveal.ct-visible { opacity: 1; transform: translateY(0); }
+.ct-reveal.ct-d1 { transition-delay: .08s; }
+.ct-reveal.ct-d2 { transition-delay: .16s; }
+.ct-reveal.ct-d3 { transition-delay: .24s; }
+.ct-reveal.ct-d4 { transition-delay: .32s; }
+.ct-reveal.ct-d5 { transition-delay: .40s; }
+
+/* Logo wiggle on hover */
+.ct-nav-logo { transition: transform .35s cubic-bezier(.2,.8,.2,1); display: inline-block; }
+.ct-nav-logo:hover { animation: ctLogoWiggle .55s cubic-bezier(.36,.07,.19,.97); }
+@keyframes ctLogoWiggle {
+  0%, 100% { transform: rotate(0); }
+  20% { transform: rotate(-3deg) scale(1.04); }
+  40% { transform: rotate(2deg) scale(1.06); }
+  60% { transform: rotate(-1.5deg) scale(1.04); }
+  80% { transform: rotate(1deg); }
+}
+
+/* Nav link underline animation */
+.ct-nav-links a { position: relative; }
+.ct-nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 12px; right: 12px; bottom: 4px;
+  height: 2px;
+  background: var(--accent-primary);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.ct-nav-links a:hover::after { transform: scaleX(1); }
+
+/* Hero CTA shimmer + pulse */
+.ct-btn-primary {
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.ct-btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -120%;
+  width: 80%; height: 100%;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.45) 50%, transparent 100%);
+  transition: left .65s ease;
+  pointer-events: none;
+}
+.ct-btn-primary:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 24px rgba(0,0,0,.18); }
+.ct-btn-primary:hover::before { left: 130%; }
+.ct-btn-primary:active { transform: translateY(0) scale(.98); }
+
+/* Hero floating decorative elements — drift further */
+.ct-hero-deco-1 { animation: ctDrift1 14s ease-in-out infinite; }
+.ct-hero-deco-2 { animation: ctDrift2 18s ease-in-out infinite; }
+.ct-hero-deco-3 { animation: ctDrift3 22s ease-in-out infinite; }
+@keyframes ctDrift1 { 0%,100%{transform:translate(0,0) rotate(0)} 50%{transform:translate(18px,-22px) rotate(8deg)} }
+@keyframes ctDrift2 { 0%,100%{transform:translate(0,0) rotate(0)} 50%{transform:translate(-22px,16px) rotate(-6deg)} }
+@keyframes ctDrift3 { 0%,100%{transform:translate(0,0) rotate(0)} 33%{transform:translate(14px,18px) rotate(4deg)} 66%{transform:translate(-12px,-10px) rotate(-3deg)} }
+
+/* Marquee — pause on hover, slight glow */
+.ct-marquee:hover .ct-marquee-track { animation-play-state: paused; }
+.ct-marquee-item { transition: color .25s ease, transform .25s ease; }
+.ct-marquee-item:hover { color: var(--accent-primary); transform: scale(1.06); }
+
+/* Category cards — extra tilt + glow on hover */
+.ct-cat-card {
+  transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s cubic-bezier(.2,.8,.2,1);
+  will-change: transform;
+}
+.ct-cat-card:hover {
+  transform: translateY(-8px) scale(1.012);
+  box-shadow: 0 18px 40px rgba(0,0,0,.22);
+}
+.ct-cat-card:hover .ct-cat-arrow {
+  animation: ctArrowSpin .6s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes ctArrowSpin { from { transform: rotate(-90deg) scale(.6); opacity: 0; } to { transform: rotate(0) scale(1); opacity: 1; } }
+
+/* Vibe cards — animated entrance + hover punch */
+.ct-vibe-card {
+  animation: ctVibeIn .8s cubic-bezier(.2,.8,.2,1) both;
+  animation-delay: calc(var(--ct-vibe-i, 0) * .1s);
+  will-change: transform;
+}
+.ct-vibe-grid > .ct-vibe-card:nth-child(1) { --ct-vibe-i: 0; }
+.ct-vibe-grid > .ct-vibe-card:nth-child(2) { --ct-vibe-i: 1; }
+.ct-vibe-grid > .ct-vibe-card:nth-child(3) { --ct-vibe-i: 2; }
+.ct-vibe-grid > .ct-vibe-card:nth-child(4) { --ct-vibe-i: 3; }
+.ct-vibe-grid > .ct-vibe-card:nth-child(5) { --ct-vibe-i: 4; }
+@keyframes ctVibeIn {
+  from { opacity: 0; transform: translateY(40px) scale(.96) rotate(-1deg); }
+  to   { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+}
+.ct-vibe-card:hover .ct-vibe-name { animation: ctVibeNamePulse .6s ease-out; }
+@keyframes ctVibeNamePulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.05); letter-spacing: .04em; }
+  100% { transform: scale(1); }
+}
+.ct-vibe-card:hover .ct-vibe-cta { animation: ctVibeArrow 1.2s ease-in-out infinite; }
+@keyframes ctVibeArrow { 0%,100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
+.ct-vibe-emoji { animation: ctVibeFloat 5s ease-in-out infinite; }
+@keyframes ctVibeFloat { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-8px) rotate(-4deg); } }
+.ct-vibe-card:hover { transform: translateY(-10px) scale(1.015); box-shadow: 0 24px 48px rgba(0,0,0,.32); }
+.ct-vibe-card:hover::before { animation: ctVibeShine 1.5s ease-out; }
+@keyframes ctVibeShine { 0% { transform: scale(.6); opacity: 0; } 50% { opacity: 1; } 100% { transform: scale(1.4); opacity: 0; } }
+
+/* Product cards — tilt + image zoom on hover */
+.ct-prod-card { transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease; will-change: transform; }
+.ct-prod-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,.18); }
+.ct-prod-card .ct-prod-img-inner img { transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+.ct-prod-card:hover .ct-prod-img-inner img { transform: scale(1.08) rotate(.5deg); }
+.ct-prod-card:hover .ct-prod-overlay { animation: ctOverlayFade .35s ease forwards; }
+@keyframes ctOverlayFade { from { opacity: 0; backdrop-filter: blur(0); } to { opacity: 1; backdrop-filter: blur(2px); } }
+.ct-prod-card:hover .ct-prod-badge { animation: ctBadgePop .5s cubic-bezier(.36,.07,.19,.97); }
+@keyframes ctBadgePop {
+  0% { transform: scale(1) rotate(0); }
+  40% { transform: scale(1.18) rotate(-4deg); }
+  70% { transform: scale(.95) rotate(2deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+/* Color swatches — bounce on hover */
+.ct-swatch { transition: transform .3s cubic-bezier(.36,.07,.19,.97), box-shadow .3s ease; will-change: transform; }
+.ct-swatch:hover { transform: scale(1.25) rotate(8deg); box-shadow: 0 4px 12px rgba(0,0,0,.25); animation: ctSwatchWobble .55s cubic-bezier(.36,.07,.19,.97); }
+@keyframes ctSwatchWobble {
+  0% { transform: scale(1) rotate(0); }
+  30% { transform: scale(1.3) rotate(-12deg); }
+  60% { transform: scale(1.18) rotate(8deg); }
+  100% { transform: scale(1.25) rotate(0); }
+}
+
+/* Section titles — scribble-underline animation when revealed */
+.ct-section-title.ct-reveal.ct-visible { position: relative; }
+.ct-section-tag { position: relative; display: inline-block; }
+.ct-section-tag::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  height: 2px;
+  width: 0;
+  background: var(--accent-primary);
+  transition: width .8s cubic-bezier(.2,.8,.2,1) .2s;
+}
+.ct-section-tag.ct-visible::after,
+.ct-section-tag.ct-reveal.ct-visible::after { width: 100%; }
+
+/* "How it works" step numbers — pulse on view */
+.ct-step-num { transition: transform .3s ease, color .3s ease; }
+.ct-step:hover .ct-step-num { animation: ctStepPulse 1s ease-out; color: var(--accent-primary); }
+@keyframes ctStepPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+/* Catalog rows — slide arrow on hover */
+.ct-coll-row { transition: background .3s ease, padding-left .3s ease; }
+.ct-coll-row:hover { padding-left: 8px; background: rgba(201,168,76,.06); }
+.ct-coll-arrow { display: inline-block; transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.ct-coll-row:hover .ct-coll-arrow { transform: translateX(10px) scale(1.2); }
+.ct-coll-row:hover .ct-coll-name { animation: ctCollSlide .4s ease-out; }
+@keyframes ctCollSlide {
+  0% { letter-spacing: var(--tracking-wide); }
+  50% { letter-spacing: .12em; }
+  100% { letter-spacing: var(--tracking-wide); }
+}
+
+/* CTA section — animated background pattern */
+.ct-cta { position: relative; overflow: hidden; }
+.ct-cta::after {
+  content: '';
+  position: absolute; inset: -50%;
+  background: conic-gradient(from 0deg at 50% 50%, transparent, rgba(201,168,76,.08), transparent);
+  animation: ctCtaSweep 12s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes ctCtaSweep { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+.ct-cta-title, .ct-cta-sub, .ct-cta .ct-btn-primary { position: relative; z-index: 2; }
+.ct-cta-title.ct-visible,
+.ct-cta-title.ct-reveal.ct-visible { animation: ctCtaTitleIn 1s cubic-bezier(.2,.8,.2,1); }
+@keyframes ctCtaTitleIn {
+  0% { opacity: 0; transform: translateY(40px) scale(.94); letter-spacing: -.02em; }
+  100% { opacity: 1; transform: translateY(0) scale(1); letter-spacing: var(--tracking-wide); }
+}
+
+/* Cart badge — bounce when count changes (already has MutationObserver) */
+.cart-badge, [class*="cart-count"] { transition: transform .3s cubic-bezier(.36,.07,.19,.97); }
+
+/* Skip link — slide in */
+.ct-skip-link { transition: left .25s cubic-bezier(.2,.8,.2,1), top .25s cubic-bezier(.2,.8,.2,1); }
+
+/* Smooth focus pulse */
+*:focus-visible { animation: ctFocusPulse .6s ease-out; }
+@keyframes ctFocusPulse {
+  0% { box-shadow: 0 0 0 0 rgba(201,168,76,.6); }
+  100% { box-shadow: 0 0 0 8px rgba(201,168,76,0); }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 </style>
 
 <div class="ct-page">
+
+  <div class="ct-scroll-progress" id="ctScrollProgress" aria-hidden="true"></div>
 
   <!-- CUSTOM NAV BAR -->
   <a href="#ctMain" class="ct-skip-link">Skip to main content</a>
@@ -2700,17 +2929,53 @@
   }, { threshold: 0.1 });
   els.forEach(function(el) { obs.observe(el); });
 
-  // Navigation scroll effect
+  // Navigation scroll effect + scroll progress bar (combined, throttled via rAF)
   var nav = document.getElementById('ctNav');
-  if (nav) {
-    window.addEventListener('scroll', function() {
-      if (window.scrollY > 50) {
-        nav.classList.add('scrolled');
-      } else {
-        nav.classList.remove('scrolled');
-      }
-    });
+  var progress = document.getElementById('ctScrollProgress');
+  var ticking = false;
+  function onScroll() {
+    if (nav) {
+      if (window.scrollY > 50) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    }
+    if (progress) {
+      var doc = document.documentElement;
+      var scrollable = (doc.scrollHeight - doc.clientHeight) || 1;
+      var pct = Math.max(0, Math.min(100, (window.scrollY / scrollable) * 100));
+      progress.style.width = pct + '%';
+    }
+    ticking = false;
   }
+  window.addEventListener('scroll', function() {
+    if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
+  }, { passive: true });
+
+  // Magnetic-cursor effect on primary buttons & vibe cards
+  var magnetic = document.querySelectorAll('.ct-btn-primary, .ct-vibe-card');
+  magnetic.forEach(function(el) {
+    el.addEventListener('mousemove', function(e) {
+      var rect = el.getBoundingClientRect();
+      var x = e.clientX - rect.left - rect.width / 2;
+      var y = e.clientY - rect.top - rect.height / 2;
+      el.style.transform = 'translate(' + (x * 0.08) + 'px, ' + (y * 0.08 - 4) + 'px)';
+    });
+    el.addEventListener('mouseleave', function() {
+      el.style.transform = '';
+    });
+  });
+
+  // Vibe-card tilt on mousemove (subtle 3D)
+  document.querySelectorAll('.ct-vibe-card').forEach(function(card) {
+    card.addEventListener('mousemove', function(e) {
+      var rect = card.getBoundingClientRect();
+      var rx = ((e.clientY - rect.top) / rect.height - 0.5) * -6;
+      var ry = ((e.clientX - rect.left) / rect.width - 0.5) * 6;
+      card.style.transform = 'translateY(-10px) perspective(800px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+    });
+    card.addEventListener('mouseleave', function() {
+      card.style.transform = '';
+    });
+  });
 
   // Mobile menu toggle
   var navToggle = document.getElementById('ctNavToggle');
