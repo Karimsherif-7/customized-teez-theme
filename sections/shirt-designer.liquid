@@ -350,6 +350,22 @@
 .sd-obj-btn.danger:hover { border-color: #cc2828; background: #fff5f5; }
 .sd-object-controls.hidden { display: none; }
 
+/* Enhanced Controls */
+.sd-position-controls,
+.sd-size-controls,
+.sd-rotation-controls {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+.sd-position-controls .sd-obj-btn,
+.sd-size-controls .sd-obj-btn,
+.sd-rotation-controls .sd-obj-btn {
+  min-width: 36px;
+  padding: 8px 4px;
+  font-size: 0.9rem;
+}
+
 /* ================================================================
    CENTER — PREVIEW
 ================================================================ */
@@ -384,6 +400,78 @@
 .sd-view-btn.active {
   background: var(--dark);
   color: var(--gold);
+}
+
+/* Zoom Controls */
+.sd-zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.sd-zoom-btn {
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  color: var(--dark);
+}
+.sd-zoom-btn:hover {
+  border-color: var(--gold);
+  background: var(--cream);
+}
+.sd-zoom-level {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--mid);
+  min-width: 50px;
+  text-align: center;
+}
+
+/* Preview Options */
+.sd-preview-options {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.sd-preview-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--mid);
+}
+.sd-preview-option-btn:hover {
+  border-color: var(--gold);
+  color: var(--dark);
+}
+.sd-preview-option-btn.active {
+  background: var(--dark);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.sd-preview-option-btn svg {
+  flex-shrink: 0;
 }
 
 /* Shirt container */
@@ -664,11 +752,175 @@
   .sd-order-panel { position: static; }
   .sd-shirt-container { width: 300px; }
   .sd-preview-wrap { padding: 0; }
+
+  /* Mobile-specific improvements */
+  .sd-placement-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+  .sd-placement-btn {
+    padding: 6px 2px;
+    font-size: 0.65rem;
+  }
+  .sd-placement-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Better touch targets */
+  .sd-obj-btn,
+  .sd-size-btn,
+  .sd-qty-btn {
+    min-height: 40px;
+    min-width: 40px;
+    font-size: 0.8rem;
+  }
+
+  /* Improved mobile controls */
+  .sd-zoom-controls {
+    padding: 6px 8px;
+  }
+  .sd-zoom-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Mobile preview options */
+  .sd-preview-options {
+    flex-wrap: wrap;
+  }
+  .sd-preview-option-btn {
+    flex: 1;
+    min-width: 100px;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 480px) {
   .sd-header h1 { font-size: 1.5rem; }
   .sd-shirt-container { width: 100%; max-width: 300px; }
+
+  /* Ultra-compact mobile layout */
+  .sd-layout {
+    padding: 12px 8px;
+    gap: 12px;
+  }
+
+  .sd-panel {
+    border-radius: 8px;
+  }
+
+  .sd-placement-btn {
+    padding: 8px 4px;
+    font-size: 0.7rem;
+  }
+
+  /* Better mobile text inputs */
+  .sd-input,
+  .sd-select {
+    padding: 12px;
+    font-size: 16px; /* Prevents iOS zoom */
+  }
+
+  /* Improved mobile buttons */
+  .sd-btn-primary,
+  .sd-atc-btn {
+    padding: 16px;
+    font-size: 1rem;
+  }
+
+  /* Mobile-friendly object controls */
+  .sd-object-controls {
+    padding: 12px;
+  }
+  .sd-position-controls,
+  .sd-size-controls,
+  .sd-rotation-controls {
+    gap: 8px;
+  }
+  .sd-position-controls .sd-obj-btn,
+  .sd-size-controls .sd-obj-btn,
+  .sd-rotation-controls .sd-obj-btn {
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 1rem;
+  }
+
+  /* Full-width mobile buttons */
+  .sd-object-btn-row {
+    flex-wrap: wrap;
+  }
+  .sd-object-btn-row .sd-obj-btn {
+    flex: 1 1 40%;
+    min-height: 44px;
+  }
+}
+
+/* Touch-specific improvements */
+@media (hover: none) and (pointer: coarse) {
+  /* Better touch feedback */
+  .sd-placement-btn:active,
+  .sd-swatch:active,
+  .sd-size-btn:active,
+  .sd-qty-btn:active,
+  .sd-obj-btn:active,
+  .sd-zoom-btn:active,
+  .sd-preview-option-btn:active {
+    transform: scale(0.95);
+    background: var(--gold-light);
+  }
+
+  /* Larger touch targets */
+  .sd-swatch {
+    width: 36px;
+    height: 36px;
+  }
+
+  .sd-text-color-swatch {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Improved mobile canvas interaction */
+  .sd-canvas-overlay {
+    touch-action: none;
+  }
+
+  /* Better mobile file upload */
+  .sd-upload-area {
+    padding: 24px 16px;
+  }
+}
+
+/* Mobile-specific optimizations */
+body.sd-mobile .sd-layout {
+  padding: 8px;
+}
+
+body.sd-mobile .sd-panel {
+  margin-bottom: 8px;
+}
+
+body.sd-mobile .sd-tools,
+body.sd-mobile .sd-order-panel {
+  position: static;
+}
+
+body.sd-mobile .sd-shirt-container {
+  max-width: 100%;
+}
+
+body.sd-mobile .sd-preview-wrap {
+  padding: 0;
+}
+
+/* Mobile-safe areas for notched devices */
+@supports (padding: max(0px)) {
+  .sd-page {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-bottom: max(60px, env(safe-area-inset-bottom));
+  }
 }
 </style>
 
@@ -713,6 +965,27 @@
             <rect x="5" y="6" width="5" height="5" rx="1" fill="currentColor" opacity="0.7"/>
           </svg>
           L. Chest
+        </button>
+        <button class="sd-placement-btn" data-placement="right-chest" onclick="sdSetPlacement('right-chest')">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="3" y="2" width="16" height="18" rx="2" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="12" y="6" width="5" height="5" rx="1" fill="currentColor" opacity="0.7"/>
+          </svg>
+          R. Chest
+        </button>
+        <button class="sd-placement-btn" data-placement="left-sleeve" onclick="sdSetPlacement('left-sleeve')">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="3" y="2" width="16" height="18" rx="2" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="4" y="4" width="4" height="6" rx="1" fill="currentColor" opacity="0.7"/>
+          </svg>
+          L. Sleeve
+        </button>
+        <button class="sd-placement-btn" data-placement="right-sleeve" onclick="sdSetPlacement('right-sleeve')">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="3" y="2" width="16" height="18" rx="2" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1.5"/>
+            <rect x="14" y="4" width="4" height="6" rx="1" fill="currentColor" opacity="0.7"/>
+          </svg>
+          R. Sleeve
         </button>
       </div>
 
@@ -793,13 +1066,74 @@
         <p style="font-size:0.72rem;color:#888;text-align:center;margin:0 0 10px;line-height:1.5;">
           Tip: Use a PNG with a transparent background for the cleanest result.
         </p>
+
+        <!-- Image Effects -->
+        <div class="sd-field-group">
+          <label class="sd-field-label">Image Effects</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="sd-obj-btn" onclick="sdApplyImageEffect('grayscale')" title="Grayscale">⚫</button>
+            <button class="sd-obj-btn" onclick="sdApplyImageEffect('sepia')" title="Sepia">🟤</button>
+            <button class="sd-obj-btn" onclick="sdApplyImageEffect('brightness')" title="Brighten">☀</button>
+            <button class="sd-obj-btn" onclick="sdApplyImageEffect('contrast')" title="Contrast">◐</button>
+            <button class="sd-obj-btn" onclick="sdApplyImageEffect('invert')" title="Invert">🔄</button>
+            <button class="sd-obj-btn" onclick="sdResetImageEffects()" title="Reset">↺</button>
+          </div>
+        </div>
+
+        <!-- Image Blend Mode -->
+        <div class="sd-field-group">
+          <label class="sd-field-label">Blend Mode</label>
+          <select class="sd-select" id="sdBlendMode" onchange="sdSetBlendMode(this.value)">
+            <option value="normal">Normal</option>
+            <option value="multiply">Multiply</option>
+            <option value="screen">Screen</option>
+            <option value="overlay">Overlay</option>
+            <option value="darken">Darken</option>
+            <option value="lighten">Lighten</option>
+          </select>
+        </div>
+
         <button class="sd-btn-secondary" onclick="sdRemoveBackground()">✨ Remove Background</button>
       </div>
 
-      <!-- Object Controls -->
+      <!-- Enhanced Object Controls -->
       <div class="sd-object-controls hidden" id="sdObjectControls">
         <div class="sd-object-controls-title">Selected Object</div>
-        <div class="sd-object-btn-row">
+
+        <!-- Position Controls -->
+        <div class="sd-field-group" style="margin-bottom:10px;">
+          <label class="sd-field-label">Position</label>
+          <div class="sd-position-controls">
+            <button class="sd-obj-btn" onclick="sdNudgeObject('up')" title="Move Up">↑</button>
+            <button class="sd-obj-btn" onclick="sdNudgeObject('down')" title="Move Down">↓</button>
+            <button class="sd-obj-btn" onclick="sdNudgeObject('left')" title="Move Left">←</button>
+            <button class="sd-obj-btn" onclick="sdNudgeObject('right')" title="Move Right">→</button>
+            <button class="sd-obj-btn" onclick="sdCenterObject()" title="Center">⊕</button>
+          </div>
+        </div>
+
+        <!-- Size Controls -->
+        <div class="sd-field-group" style="margin-bottom:10px;">
+          <label class="sd-field-label">Size</label>
+          <div class="sd-size-controls">
+            <button class="sd-obj-btn" onclick="sdScaleObject(0.9)" title="Smaller">-</button>
+            <button class="sd-obj-btn" onclick="sdScaleObject(1.1)" title="Larger">+</button>
+            <button class="sd-obj-btn" onclick="sdResetObjectSize()" title="Reset Size">↺</button>
+          </div>
+        </div>
+
+        <!-- Rotation Controls -->
+        <div class="sd-field-group" style="margin-bottom:10px;">
+          <label class="sd-field-label">Rotation</label>
+          <div class="sd-rotation-controls">
+            <button class="sd-obj-btn" onclick="sdRotateObject(-15)" title="Rotate Left">↺</button>
+            <button class="sd-obj-btn" onclick="sdRotateObject(15)" title="Rotate Right">↻</button>
+            <button class="sd-obj-btn" onclick="sdResetObjectRotation()" title="Reset Rotation">0°</button>
+          </div>
+        </div>
+
+        <!-- Layer Controls -->
+        <div class="sd-object-btn-row" style="margin-top:10px;">
           <button class="sd-obj-btn" onclick="sdMoveForward()">↑ Fwd</button>
           <button class="sd-obj-btn" onclick="sdMoveBackward()">↓ Back</button>
           <button class="sd-obj-btn" onclick="sdDuplicateObject()">⎘ Copy</button>
@@ -816,6 +1150,32 @@
       <div class="sd-view-toggle">
         <button class="sd-view-btn active" id="sdFrontViewBtn" onclick="sdSetView('front')">Front</button>
         <button class="sd-view-btn" id="sdBackViewBtn" onclick="sdSetView('back')">Back</button>
+      </div>
+
+      <!-- Zoom Controls -->
+      <div class="sd-zoom-controls">
+        <button class="sd-zoom-btn" onclick="sdZoomOut()" title="Zoom Out">−</button>
+        <span class="sd-zoom-level" id="sdZoomLevel">100%</span>
+        <button class="sd-zoom-btn" onclick="sdZoomIn()" title="Zoom In">+</button>
+        <button class="sd-zoom-btn" onclick="sdResetZoom()" title="Reset Zoom">↺</button>
+      </div>
+
+      <!-- Preview Options -->
+      <div class="sd-preview-options">
+        <button class="sd-preview-option-btn active" id="sdShowGuideBtn" onclick="sdTogglePrintGuide()" title="Toggle Print Area Guide">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="9" y1="21" x2="9" y2="9"/>
+          </svg>
+          Guide
+        </button>
+        <button class="sd-preview-option-btn" id="sdFullscreenBtn" onclick="sdToggleFullscreen()" title="Fullscreen Preview">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+          </svg>
+          Fullscreen
+        </button>
       </div>
 
       <div class="sd-shirt-container" id="sdShirtContainer">
@@ -858,6 +1218,15 @@
         </div>
         <div class="sd-canvas-overlay" id="sdCanvasLeftChest">
           <canvas id="canvasLeftChest"></canvas>
+        </div>
+        <div class="sd-canvas-overlay" id="sdCanvasRightChest">
+          <canvas id="canvasRightChest"></canvas>
+        </div>
+        <div class="sd-canvas-overlay" id="sdCanvasLeftSleeve">
+          <canvas id="canvasLeftSleeve"></canvas>
+        </div>
+        <div class="sd-canvas-overlay" id="sdCanvasRightSleeve">
+          <canvas id="canvasRightSleeve"></canvas>
         </div>
       </div>
 
@@ -978,6 +1347,21 @@ var PLACEMENT_CONFIG = {
     view: 'front',
     svgX: 113, svgY: 158, svgW: 80, svgH: 85,
     label: 'Left Chest'
+  },
+  'right-chest': {
+    view: 'front',
+    svgX: 207, svgY: 158, svgW: 80, svgH: 85,
+    label: 'Right Chest'
+  },
+  'left-sleeve': {
+    view: 'front',
+    svgX: 20, svgY: 140, svgW: 60, svgH: 100,
+    label: 'Left Sleeve'
+  },
+  'right-sleeve': {
+    view: 'front',
+    svgX: 320, svgY: 140, svgW: 60, svgH: 100,
+    label: 'Right Sleeve'
   }
 };
 
@@ -1008,7 +1392,8 @@ var state = {
   selectedVariantId: null,
   selectedSize: null,
   isBold: false,
-  isItalic: false
+  isItalic: false,
+  zoomLevel: 1.0
 };
 
 // Fabric.js canvas instances (keyed by placement)
@@ -1047,7 +1432,91 @@ window.addEventListener('DOMContentLoaded', function() {
   window.addEventListener('resize', debounce(function() {
     measureAndInitCanvases();
   }, 300));
+
+  // Mobile-specific improvements
+  initMobileOptimizations();
 });
+
+// ----------------------------------------------------------------
+// MOBILE OPTIMIZATIONS
+// ----------------------------------------------------------------
+function initMobileOptimizations() {
+  // Detect mobile device
+  var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    // Improve touch interactions on mobile
+    improveTouchInteractions();
+
+    // Optimize canvas performance for mobile
+    optimizeCanvasPerformance();
+
+    // Add mobile-specific UI improvements
+    addMobileUIImprovements();
+  }
+}
+
+function improveTouchInteractions() {
+  // Prevent default touch behaviors on canvas elements
+  var canvasElements = document.querySelectorAll('.sd-canvas-overlay canvas');
+  canvasElements.forEach(function(canvas) {
+    canvas.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+    }, { passive: false });
+  });
+
+  // Improve button touch feedback
+  var touchButtons = document.querySelectorAll('.sd-placement-btn, .sd-swatch, .sd-size-btn, .sd-obj-btn');
+  touchButtons.forEach(function(btn) {
+    btn.addEventListener('touchstart', function() {
+      this.style.transform = 'scale(0.95)';
+    }, { passive: true });
+
+    btn.addEventListener('touchend', function() {
+      this.style.transform = '';
+    }, { passive: true });
+  });
+}
+
+function optimizeCanvasPerformance() {
+  // Reduce canvas rendering quality on mobile for better performance
+  Object.keys(fabricCanvases).forEach(function(key) {
+    var canvas = fabricCanvases[key];
+    if (canvas) {
+      // Disable object caching for better mobile performance
+      canvas.renderOnAddRemove = false;
+
+      // Optimize for mobile
+      canvas.isDrawingMode = false;
+    }
+  });
+}
+
+function addMobileUIImprovements() {
+  // Add mobile-specific class to body
+  document.body.classList.add('sd-mobile');
+
+  // Improve scroll behavior on mobile
+  var sdPage = document.querySelector('.sd-page');
+  if (sdPage) {
+    sdPage.style.webkitOverflowScrolling = 'touch';
+  }
+
+  // Add mobile-specific keyboard handling
+  var textInputs = document.querySelectorAll('.sd-input');
+  textInputs.forEach(function(input) {
+    input.addEventListener('focus', function() {
+      // Scroll input into view on mobile
+      setTimeout(function() {
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    });
+  });
+}
 
 function measureAndInitCanvases() {
   var container = document.getElementById('sdShirtContainer');
@@ -1057,6 +1526,9 @@ function measureAndInitCanvases() {
   initCanvas('front');
   initCanvas('back');
   initCanvas('left-chest');
+  initCanvas('right-chest');
+  initCanvas('left-sleeve');
+  initCanvas('right-sleeve');
   positionCanvasOverlays();
   updatePrintAreaGuide();
 }
@@ -1107,17 +1579,25 @@ function initCanvas(placement) {
 function canvasElId(placement) {
   if (placement === 'front') return 'canvasFront';
   if (placement === 'back') return 'canvasBack';
-  return 'canvasLeftChest';
+  if (placement === 'left-chest') return 'canvasLeftChest';
+  if (placement === 'right-chest') return 'canvasRightChest';
+  if (placement === 'left-sleeve') return 'canvasLeftSleeve';
+  if (placement === 'right-sleeve') return 'canvasRightSleeve';
+  return 'canvasFront';
 }
 
 function canvasWrapperId(placement) {
   if (placement === 'front') return 'sdCanvasFront';
   if (placement === 'back') return 'sdCanvasBack';
-  return 'sdCanvasLeftChest';
+  if (placement === 'left-chest') return 'sdCanvasLeftChest';
+  if (placement === 'right-chest') return 'sdCanvasRightChest';
+  if (placement === 'left-sleeve') return 'sdCanvasLeftSleeve';
+  if (placement === 'right-sleeve') return 'sdCanvasRightSleeve';
+  return 'sdCanvasFront';
 }
 
 function positionCanvasOverlays() {
-  ['front','back','left-chest'].forEach(function(pl) {
+  ['front','back','left-chest','right-chest','left-sleeve','right-sleeve'].forEach(function(pl) {
     var dims = getCanvasDims(pl);
     var wrapper = document.getElementById(canvasWrapperId(pl));
     wrapper.style.position = 'absolute';
@@ -1196,7 +1676,7 @@ window.sdSetPlacement = function(placement) {
 
 function updateActiveCanvas() {
   var pl = state.placement;
-  ['front','back','left-chest'].forEach(function(p) {
+  ['front','back','left-chest','right-chest','left-sleeve','right-sleeve'].forEach(function(p) {
     var wrapper = document.getElementById(canvasWrapperId(p));
     var isActive = (p === pl);
     wrapper.classList.toggle('active', isActive);
@@ -1226,11 +1706,98 @@ window.sdSetView = function(view) {
   document.getElementById('sdShirtBackSvg').style.display = view === 'back' ? 'block' : 'none';
 
   // Show/hide canvas overlays based on view
-  ['front','left-chest'].forEach(function(p) {
+  // Front view shows: front, left-chest, right-chest, left-sleeve, right-sleeve
+  // Back view shows: back
+  var frontPlacements = ['front','left-chest','right-chest','left-sleeve','right-sleeve'];
+  frontPlacements.forEach(function(p) {
     document.getElementById(canvasWrapperId(p)).style.display = view === 'front' ? '' : 'none';
   });
   document.getElementById(canvasWrapperId('back')).style.display = view === 'back' ? '' : 'none';
 };
+
+// ----------------------------------------------------------------
+// ZOOM CONTROLS
+// ----------------------------------------------------------------
+window.sdZoomIn = function() {
+  state.zoomLevel = Math.min(state.zoomLevel + 0.1, 2.0);
+  applyZoom();
+};
+
+window.sdZoomOut = function() {
+  state.zoomLevel = Math.max(state.zoomLevel - 0.1, 0.5);
+  applyZoom();
+};
+
+window.sdResetZoom = function() {
+  state.zoomLevel = 1.0;
+  applyZoom();
+};
+
+function applyZoom() {
+  var container = document.getElementById('sdShirtContainer');
+  var zoomPercent = Math.round(state.zoomLevel * 100);
+  document.getElementById('sdZoomLevel').textContent = zoomPercent + '%';
+
+  container.style.transform = 'scale(' + state.zoomLevel + ')';
+  container.style.transformOrigin = 'center center';
+  container.style.transition = 'transform 0.3s ease';
+}
+
+// ----------------------------------------------------------------
+// PREVIEW OPTIONS
+// ----------------------------------------------------------------
+window.sdTogglePrintGuide = function() {
+  var guide = document.getElementById('sdPrintAreaGuide');
+  var btn = document.getElementById('sdShowGuideBtn');
+
+  if (guide.style.display === 'none') {
+    guide.style.display = '';
+    btn.classList.add('active');
+  } else {
+    guide.style.display = 'none';
+    btn.classList.remove('active');
+  }
+};
+
+window.sdToggleFullscreen = function() {
+  var container = document.getElementById('sdShirtContainer');
+  var btn = document.getElementById('sdFullscreenBtn');
+
+  if (!document.fullscreenElement) {
+    if (container.requestFullscreen) {
+      container.requestFullscreen();
+    } else if (container.webkitRequestFullscreen) {
+      container.webkitRequestFullscreen();
+    } else if (container.msRequestFullscreen) {
+      container.msRequestFullscreen();
+    }
+    btn.classList.add('active');
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+    btn.classList.remove('active');
+  }
+};
+
+// Handle fullscreen change events
+document.addEventListener('fullscreenchange', function() {
+  var btn = document.getElementById('sdFullscreenBtn');
+  if (!document.fullscreenElement) {
+    btn.classList.remove('active');
+  }
+});
+
+document.addEventListener('webkitfullscreenchange', function() {
+  var btn = document.getElementById('sdFullscreenBtn');
+  if (!document.webkitFullscreenElement) {
+    btn.classList.remove('active');
+  }
+});
 
 // ----------------------------------------------------------------
 // TOOL SWITCHING
@@ -1401,6 +1968,198 @@ window.sdDeleteObject = function() {
   if (obj) { canvas.remove(obj); canvas.renderAll(); }
 };
 
+// ----------------------------------------------------------------
+// ENHANCED OBJECT CONTROLS
+// ----------------------------------------------------------------
+window.sdNudgeObject = function(direction) {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (!obj) return;
+
+  var nudgeAmount = 5;
+  switch(direction) {
+    case 'up': obj.set('top', obj.top - nudgeAmount); break;
+    case 'down': obj.set('top', obj.top + nudgeAmount); break;
+    case 'left': obj.set('left', obj.left - nudgeAmount); break;
+    case 'right': obj.set('left', obj.left + nudgeAmount); break;
+  }
+  obj.setCoords();
+  canvas.renderAll();
+};
+
+window.sdCenterObject = function() {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (!obj) return;
+
+  obj.set({
+    left: canvas.width / 2,
+    top: canvas.height / 2,
+    originX: 'center',
+    originY: 'center'
+  });
+  obj.setCoords();
+  canvas.renderAll();
+};
+
+window.sdScaleObject = function(scaleFactor) {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (!obj) return;
+
+  var currentScaleX = obj.scaleX || 1;
+  var currentScaleY = obj.scaleY || 1;
+  var newScaleX = currentScaleX * scaleFactor;
+  var newScaleY = currentScaleY * scaleFactor;
+
+  // Limit minimum and maximum scale
+  newScaleX = Math.max(0.1, Math.min(newScaleX, 5));
+  newScaleY = Math.max(0.1, Math.min(newScaleY, 5));
+
+  obj.set({
+    scaleX: newScaleX,
+    scaleY: newScaleY
+  });
+  obj.setCoords();
+  canvas.renderAll();
+};
+
+window.sdResetObjectSize = function() {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (!obj) return;
+
+  obj.set({
+    scaleX: 1,
+    scaleY: 1
+  });
+  obj.setCoords();
+  canvas.renderAll();
+};
+
+window.sdRotateObject = function(angle) {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (!obj) return;
+
+  var currentAngle = obj.angle || 0;
+  var newAngle = currentAngle + angle;
+  obj.set('angle', newAngle);
+  obj.setCoords();
+  canvas.renderAll();
+};
+
+window.sdResetObjectRotation = function() {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (!obj) return;
+
+  obj.set('angle', 0);
+  obj.setCoords();
+  canvas.renderAll();
+};
+
+// ----------------------------------------------------------------
+// IMAGE EFFECTS
+// ----------------------------------------------------------------
+window.sdApplyImageEffect = function(effect) {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (!obj || obj.type !== 'image') {
+    sdShowToast('Please select an image first.');
+    return;
+  }
+
+  var currentFilter = obj.filters || [];
+
+  switch(effect) {
+    case 'grayscale':
+      var grayscale = new fabric.Image.filters.Grayscale();
+      // Check if grayscale already exists
+      var hasGrayscale = currentFilter.some(function(f) { return f.type === 'Grayscale'; });
+      if (!hasGrayscale) {
+        currentFilter.push(grayscale);
+      } else {
+        // Remove grayscale
+        currentFilter = currentFilter.filter(function(f) { return f.type !== 'Grayscale'; });
+      }
+      break;
+
+    case 'sepia':
+      var sepia = new fabric.Image.filters.Sepia();
+      var hasSepia = currentFilter.some(function(f) { return f.type === 'Sepia'; });
+      if (!hasSepia) {
+        currentFilter.push(sepia);
+      } else {
+        currentFilter = currentFilter.filter(function(f) { return f.type !== 'Sepia'; });
+      }
+      break;
+
+    case 'brightness':
+      var brightness = new fabric.Image.filters.Brightness({ brightness: 0.1 });
+      var hasBrightness = currentFilter.some(function(f) { return f.type === 'Brightness'; });
+      if (hasBrightness) {
+        // Increase existing brightness
+        currentFilter.forEach(function(f) {
+          if (f.type === 'Brightness') {
+            f.brightness = Math.min(f.brightness + 0.1, 0.5);
+          }
+        });
+      } else {
+        currentFilter.push(brightness);
+      }
+      break;
+
+    case 'contrast':
+      var contrast = new fabric.Image.filters.Contrast({ contrast: 0.1 });
+      var hasContrast = currentFilter.some(function(f) { return f.type === 'Contrast'; });
+      if (hasContrast) {
+        currentFilter.forEach(function(f) {
+          if (f.type === 'Contrast') {
+            f.contrast = Math.min(f.contrast + 0.1, 0.5);
+          }
+        });
+      } else {
+        currentFilter.push(contrast);
+      }
+      break;
+
+    case 'invert':
+      var invert = new fabric.Image.filters.Invert();
+      var hasInvert = currentFilter.some(function(f) { return f.type === 'Invert'; });
+      if (!hasInvert) {
+        currentFilter.push(invert);
+      } else {
+        currentFilter = currentFilter.filter(function(f) { return f.type !== 'Invert'; });
+      }
+      break;
+  }
+
+  obj.filters = currentFilter;
+  obj.applyFilters();
+  canvas.renderAll();
+};
+
+window.sdResetImageEffects = function() {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (!obj || obj.type !== 'image') return;
+
+  obj.filters = [];
+  obj.applyFilters();
+  canvas.renderAll();
+  sdShowToast('Image effects reset.');
+};
+
+window.sdSetBlendMode = function(blendMode) {
+  var canvas = getActiveCanvas();
+  var obj = canvas.getActiveObject();
+  if (!obj) return;
+
+  obj.set('globalCompositeOperation', blendMode);
+  canvas.renderAll();
+};
+
 // Keyboard delete
 document.addEventListener('keydown', function(e) {
   if ((e.key === 'Delete' || e.key === 'Backspace') && e.target === document.body) {
@@ -1434,7 +2193,14 @@ function updateDesignSummary() {
   chips.push('<span class="sd-chip"><span class="sd-chip-dot" style="background:' + state.shirtColor + ';border:1px solid #ccc;"></span>' + state.shirtColorName + '</span>');
 
   // Check each canvas for objects
-  var placements = { front: 'Front', back: 'Back', 'left-chest': 'L. Chest' };
+  var placements = {
+    front: 'Front',
+    back: 'Back',
+    'left-chest': 'L. Chest',
+    'right-chest': 'R. Chest',
+    'left-sleeve': 'L. Sleeve',
+    'right-sleeve': 'R. Sleeve'
+  };
   Object.keys(placements).forEach(function(pl) {
     var fc = fabricCanvases[pl];
     if (fc && fc.getObjects().length > 0) {
@@ -1477,7 +2243,7 @@ window.sdAddToCart = function() {
 
   // Gather text elements
   var textCount = 0;
-  ['front','back','left-chest'].forEach(function(pl) {
+  ['front','back','left-chest','right-chest','left-sleeve','right-sleeve'].forEach(function(pl) {
     var fc = fabricCanvases[pl];
     if (!fc) return;
     fc.getObjects().forEach(function(obj) {
@@ -1562,7 +2328,7 @@ window.sdDownloadDesign = function(silent) {
     URL.revokeObjectURL(svgUrl);
 
     // Draw each fabric canvas
-    ['front','back','left-chest'].forEach(function(pl) {
+    ['front','back','left-chest','right-chest','left-sleeve','right-sleeve'].forEach(function(pl) {
       var cfg = PLACEMENT_CONFIG[pl];
       var fc = fabricCanvases[pl];
       if (!fc || fc.getObjects().length === 0) return;
@@ -1617,3 +2383,58 @@ function debounce(fn, delay) {
 
 })();
 </script>
+
+{% schema %}
+{
+  "name": "Shirt Designer",
+  "tag": "section",
+  "class": "section-shirt-designer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Designer Configuration"
+    },
+    {
+      "type": "text",
+      "id": "designer_title",
+      "label": "Page title",
+      "default": "Custom Shirt Designer"
+    },
+    {
+      "type": "text",
+      "id": "designer_subtitle",
+      "label": "Subtitle",
+      "default": "Upload your design, choose your placement, and we'll print it in 48 hours."
+    },
+    {
+      "type": "product",
+      "id": "default_product",
+      "label": "Default product to add to cart",
+      "info": "Used when customer clicks Add to Cart from designer."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_text_tool",
+      "label": "Enable text tool",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_upload",
+      "label": "Enable image upload",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_effects",
+      "label": "Enable image effects (grayscale, sepia, etc.)",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shirt Designer"
+    }
+  ]
+}
+{% endschema %}

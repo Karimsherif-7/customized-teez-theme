@@ -261,6 +261,11 @@
   border-color: var(--accent-primary);
 }
 
+/* Skip link & a11y */
+.ct-skip-link { position: absolute; left: -9999px; top: 0; z-index: 10000; background: var(--bg-dark); color: #fff; padding: 12px 18px; font-weight: 700; text-decoration: none; }
+.ct-skip-link:focus { left: 12px; top: 12px; outline: 2px solid var(--accent-primary); outline-offset: 2px; }
+.ct-swatch:focus-visible, .ct-prod-overlay:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 3px; }
+
 /* Mobile menu button */
 .ct-nav-mobile-toggle {
   display: none;
@@ -2272,7 +2277,8 @@
 <div class="ct-page">
 
   <!-- CUSTOM NAV BAR -->
-  <nav class="ct-nav" id="ctNav">
+  <a href="#ctMain" class="ct-skip-link">Skip to main content</a>
+  <nav class="ct-nav" id="ctNav" aria-label="Main navigation">
     <a href="{{ routes.root_url }}" class="ct-nav-logo">Customized<span>Tees</span></a>
 
     <div class="ct-nav-links">
@@ -2317,7 +2323,7 @@
   </nav>
 
   <!-- HERO -->
-  <section class="ct-hero">
+  <section class="ct-hero" id="ctMain">
     <!-- Floating decorative elements -->
     <div class="ct-hero-float ct-hero-float-1"></div>
     <div class="ct-hero-float ct-hero-float-2"></div>
@@ -2344,7 +2350,7 @@
     <div class="ct-hero-right">
       <div class="ct-hero-img-box">
         {%- if section.settings.hero_image != blank -%}
-          {{ section.settings.hero_image | image_url: width: 700 | image_tag: alt: 'Customized Tees Hero', class: '' }}
+          {{ section.settings.hero_image | image_url: width: 700 | image_tag: alt: 'Customized Tees Hero', class: '', loading: 'eager', fetchpriority: 'high', sizes: '(max-width: 960px) 100vw, 50vw' }}
         {%- else -%}
           <span class="ct-hero-img-hint">Upload hero image in theme editor</span>
         {%- endif -%}
@@ -2390,32 +2396,32 @@
     </div>
     <div class="ct-cat-grid">
       <a href="/collections/all?filter.p.product_type=Short+Sleeve" class="ct-cat-card ct-reveal">
-        <div class="ct-cat-img">{%- if section.settings.cat_image_1 != blank -%}{{ section.settings.cat_image_1 | image_url: width: 800 | image_tag: alt: 'Short Sleeve Tees' }}{%- else -%}<span class="ct-cat-img-hint">Short Sleeve Image</span>{%- endif -%}</div>
+        <div class="ct-cat-img">{%- if section.settings.cat_image_1 != blank -%}{{ section.settings.cat_image_1 | image_url: width: 800 | image_tag: alt: 'Short Sleeve Tees', loading: 'lazy', sizes: '(max-width: 960px) 100vw, 50vw' }}{%- else -%}<span class="ct-cat-img-hint">Short Sleeve Image</span>{%- endif -%}</div>
         <div class="ct-cat-overlay"><span class="ct-cat-label">Most Popular</span><div class="ct-cat-name">Short Sleeve Tees</div><div class="ct-cat-count">4 Styles &middot; 3&ndash;5 Colors Each</div></div>
         <div class="ct-cat-arrow">&rarr;</div>
       </a>
       <a href="/collections/all?filter.p.product_type=Hoodies" class="ct-cat-card ct-reveal ct-d1">
-        <div class="ct-cat-img">{%- if section.settings.cat_image_2 != blank -%}{{ section.settings.cat_image_2 | image_url: width: 600 | image_tag: alt: 'Hoodies' }}{%- else -%}<span class="ct-cat-img-hint">Hoodie Image</span>{%- endif -%}</div>
+        <div class="ct-cat-img">{%- if section.settings.cat_image_2 != blank -%}{{ section.settings.cat_image_2 | image_url: width: 600 | image_tag: alt: 'Hoodies', loading: 'lazy', sizes: '(max-width: 960px) 100vw, 33vw' }}{%- else -%}<span class="ct-cat-img-hint">Hoodie Image</span>{%- endif -%}</div>
         <div class="ct-cat-overlay"><span class="ct-cat-label">Streetwear</span><div class="ct-cat-name">Hoodies</div><div class="ct-cat-count">Pullover + Zip-Up</div></div>
         <div class="ct-cat-arrow">&rarr;</div>
       </a>
       <a href="/collections/all?filter.p.product_type=Long+Sleeve" class="ct-cat-card ct-reveal ct-d2">
-        <div class="ct-cat-img">{%- if section.settings.cat_image_3 != blank -%}{{ section.settings.cat_image_3 | image_url: width: 600 | image_tag: alt: 'Long Sleeve' }}{%- else -%}<span class="ct-cat-img-hint">Long Sleeve Image</span>{%- endif -%}</div>
+        <div class="ct-cat-img">{%- if section.settings.cat_image_3 != blank -%}{{ section.settings.cat_image_3 | image_url: width: 600 | image_tag: alt: 'Long Sleeve', loading: 'lazy', sizes: '(max-width: 960px) 100vw, 33vw' }}{%- else -%}<span class="ct-cat-img-hint">Long Sleeve Image</span>{%- endif -%}</div>
         <div class="ct-cat-overlay"><span class="ct-cat-label">Season Staple</span><div class="ct-cat-name">Long Sleeve</div><div class="ct-cat-count">6 Colors Available</div></div>
         <div class="ct-cat-arrow">&rarr;</div>
       </a>
       <a href="/collections/all?filter.p.product_type=Sweatshirts" class="ct-cat-card ct-reveal ct-d1">
-        <div class="ct-cat-img">{%- if section.settings.cat_image_4 != blank -%}{{ section.settings.cat_image_4 | image_url: width: 600 | image_tag: alt: 'Sweatshirts' }}{%- else -%}<span class="ct-cat-img-hint">Sweatshirt Image</span>{%- endif -%}</div>
+        <div class="ct-cat-img">{%- if section.settings.cat_image_4 != blank -%}{{ section.settings.cat_image_4 | image_url: width: 600 | image_tag: alt: 'Sweatshirts', loading: 'lazy', sizes: '(max-width: 960px) 100vw, 33vw' }}{%- else -%}<span class="ct-cat-img-hint">Sweatshirt Image</span>{%- endif -%}</div>
         <div class="ct-cat-overlay"><span class="ct-cat-label">Cozy</span><div class="ct-cat-name">Sweatshirts</div><div class="ct-cat-count">Crewneck &middot; 6 Colors</div></div>
         <div class="ct-cat-arrow">&rarr;</div>
       </a>
       <a href="/collections/all?filter.p.product_type=Tank+Tops" class="ct-cat-card ct-reveal ct-d2">
-        <div class="ct-cat-img">{%- if section.settings.cat_image_5 != blank -%}{{ section.settings.cat_image_5 | image_url: width: 600 | image_tag: alt: 'Tank Tops' }}{%- else -%}<span class="ct-cat-img-hint">Tank Top Image</span>{%- endif -%}</div>
+        <div class="ct-cat-img">{%- if section.settings.cat_image_5 != blank -%}{{ section.settings.cat_image_5 | image_url: width: 600 | image_tag: alt: 'Tank Tops', loading: 'lazy', sizes: '(max-width: 960px) 100vw, 33vw' }}{%- else -%}<span class="ct-cat-img-hint">Tank Top Image</span>{%- endif -%}</div>
         <div class="ct-cat-overlay"><span class="ct-cat-label">Summer Ready</span><div class="ct-cat-name">Tank Tops</div><div class="ct-cat-count">6 Colors Available</div></div>
         <div class="ct-cat-arrow">&rarr;</div>
       </a>
       <a href="/collections/all?filter.p.product_type=Bottoms" class="ct-cat-card ct-reveal ct-d3">
-        <div class="ct-cat-img">{%- if section.settings.cat_image_6 != blank -%}{{ section.settings.cat_image_6 | image_url: width: 600 | image_tag: alt: 'Bottoms' }}{%- else -%}<span class="ct-cat-img-hint">Bottoms Image</span>{%- endif -%}</div>
+        <div class="ct-cat-img">{%- if section.settings.cat_image_6 != blank -%}{{ section.settings.cat_image_6 | image_url: width: 600 | image_tag: alt: 'Bottoms', loading: 'lazy', sizes: '(max-width: 960px) 100vw, 33vw' }}{%- else -%}<span class="ct-cat-img-hint">Bottoms Image</span>{%- endif -%}</div>
         <div class="ct-cat-overlay"><span class="ct-cat-label">Full Sets</span><div class="ct-cat-name">Bottoms</div><div class="ct-cat-count">Sweatpants + Shorts</div></div>
         <div class="ct-cat-arrow">&rarr;</div>
       </a>
@@ -2447,21 +2453,21 @@
     </div>
     <div class="ct-prod-grid">
 <a href="/products/custom-classic-tee" class="ct-prod-card ct-reveal">
-  <div class="ct-prod-img"><div class="ct-prod-img-inner">{%- assign prod1 = all_products['custom-classic-tee'] -%}{%- if prod1.featured_image -%}{{ prod1.featured_image | image_url: width: 600 | image_tag: alt: prod1.title }}{%- else -%}<span class="ct-prod-img-hint">Classic Tee Image</span>{%- endif -%}</div><div class="ct-prod-overlay"><span class="ct-prod-overlay-btn">Customize This</span></div></div>
-  <div class="ct-prod-info"><span class="ct-prod-badge">Bestseller</span><div class="ct-prod-name">Custom Classic Tee</div><div class="ct-prod-colors"><div class="ct-swatch" style="background:#111"></div><div class="ct-swatch" style="background:#f0f0f0;border-color:#444"></div><div class="ct-swatch" style="background:#9a9a8a"></div></div><div><span class="ct-prod-price">$32</span><span class="ct-prod-price-orig">$40</span></div></div>
+  <div class="ct-prod-img"><div class="ct-prod-img-inner">{%- assign prod1 = all_products['custom-classic-tee'] -%}{%- if prod1.featured_image -%}{{ prod1.featured_image | image_url: width: 600 | image_tag: alt: prod1.title, loading: 'lazy', sizes: '(max-width: 960px) 50vw, 25vw' }}{%- else -%}<span class="ct-prod-img-hint">Classic Tee Image</span>{%- endif -%}</div><a class="ct-prod-overlay" href="/pages/shirt-designer" aria-label="Customize this product"><span class="ct-prod-overlay-btn">Customize This</span></a></div>
+  <div class="ct-prod-info"><span class="ct-prod-badge">Bestseller</span><div class="ct-prod-name">Custom Classic Tee</div><div class="ct-prod-colors" role="list" aria-label="Available colors"><span class="ct-swatch" role="listitem" aria-label="Black" style="background:#111"></span><span class="ct-swatch" role="listitem" aria-label="White" style="background:#f0f0f0;border-color:#444"></span><span class="ct-swatch" role="listitem" aria-label="Washed Grey" style="background:#9a9a8a"></span></div><div><span class="ct-prod-price">$32</span><span class="ct-prod-price-orig">$40</span></div></div>
 </a>
 
       <a href="/products/custom-oversized-tee" class="ct-prod-card ct-reveal ct-d1">
-        <div class="ct-prod-img"><div class="ct-prod-img-inner">{%- assign prod2 = all_products['custom-oversized-tee'] -%}{%- if prod2.featured_image -%}{{ prod2.featured_image | image_url: width: 600 | image_tag: alt: prod2.title }}{%- else -%}<span class="ct-prod-img-hint">Oversized Tee Image</span>{%- endif -%}</div><div class="ct-prod-overlay"><span class="ct-prod-overlay-btn">Customize This</span></div></div>
-        <div class="ct-prod-info"><span class="ct-prod-badge">New</span><div class="ct-prod-name">Custom Oversized Tee</div><div class="ct-prod-colors"><div class="ct-swatch" style="background:#111"></div><div class="ct-swatch" style="background:#1a2235"></div><div class="ct-swatch" style="background:#b8a99a"></div></div><div><span class="ct-prod-price">$36</span><span class="ct-prod-price-orig">$45</span></div></div>
+        <div class="ct-prod-img"><div class="ct-prod-img-inner">{%- assign prod2 = all_products['custom-oversized-tee'] -%}{%- if prod2.featured_image -%}{{ prod2.featured_image | image_url: width: 600 | image_tag: alt: prod2.title, loading: 'lazy', sizes: '(max-width: 960px) 50vw, 25vw' }}{%- else -%}<span class="ct-prod-img-hint">Oversized Tee Image</span>{%- endif -%}</div><a class="ct-prod-overlay" href="/pages/shirt-designer" aria-label="Customize this product"><span class="ct-prod-overlay-btn">Customize This</span></a></div>
+        <div class="ct-prod-info"><span class="ct-prod-badge">New</span><div class="ct-prod-name">Custom Oversized Tee</div><div class="ct-prod-colors" role="list" aria-label="Available colors"><span class="ct-swatch" role="listitem" aria-label="Black" style="background:#111"></span><span class="ct-swatch" role="listitem" aria-label="Midnight Navy" style="background:#1a2235"></span><span class="ct-swatch" role="listitem" aria-label="Stone" style="background:#b8a99a"></span></div><div><span class="ct-prod-price">$36</span><span class="ct-prod-price-orig">$45</span></div></div>
       </a>
       <a href="/products/custom-pullover-hoodie" class="ct-prod-card ct-reveal ct-d2">
-        <div class="ct-prod-img"><div class="ct-prod-img-inner">{%- assign prod3 = all_products['custom-pullover-hoodie'] -%}{%- if prod3.featured_image -%}{{ prod3.featured_image | image_url: width: 600 | image_tag: alt: prod3.title }}{%- else -%}<span class="ct-prod-img-hint">Hoodie Image</span>{%- endif -%}</div><div class="ct-prod-overlay"><span class="ct-prod-overlay-btn">Customize This</span></div></div>
-        <div class="ct-prod-info"><span class="ct-prod-badge">Popular</span><div class="ct-prod-name">Custom Pullover Hoodie</div><div class="ct-prod-colors"><div class="ct-swatch" style="background:#111"></div><div class="ct-swatch" style="background:#3d3d3d"></div><div class="ct-swatch" style="background:#6b7c5a"></div></div><div><span class="ct-prod-price">$58</span><span class="ct-prod-price-orig">$75</span></div></div>
+        <div class="ct-prod-img"><div class="ct-prod-img-inner">{%- assign prod3 = all_products['custom-pullover-hoodie'] -%}{%- if prod3.featured_image -%}{{ prod3.featured_image | image_url: width: 600 | image_tag: alt: prod3.title, loading: 'lazy', sizes: '(max-width: 960px) 50vw, 25vw' }}{%- else -%}<span class="ct-prod-img-hint">Hoodie Image</span>{%- endif -%}</div><a class="ct-prod-overlay" href="/pages/shirt-designer" aria-label="Customize this product"><span class="ct-prod-overlay-btn">Customize This</span></a></div>
+        <div class="ct-prod-info"><span class="ct-prod-badge">Popular</span><div class="ct-prod-name">Custom Pullover Hoodie</div><div class="ct-prod-colors" role="list" aria-label="Available colors"><span class="ct-swatch" role="listitem" aria-label="Black" style="background:#111"></span><span class="ct-swatch" role="listitem" aria-label="Charcoal" style="background:#3d3d3d"></span><span class="ct-swatch" role="listitem" aria-label="Olive" style="background:#6b7c5a"></span></div><div><span class="ct-prod-price">$58</span><span class="ct-prod-price-orig">$75</span></div></div>
       </a>
       <a href="/products/custom-crop-tee" class="ct-prod-card ct-reveal ct-d3">
-        <div class="ct-prod-img"><div class="ct-prod-img-inner">{%- assign prod4 = all_products['custom-crop-tee'] -%}{%- if prod4.featured_image -%}{{ prod4.featured_image | image_url: width: 600 | image_tag: alt: prod4.title }}{%- else -%}<span class="ct-prod-img-hint">Crop Tee Image</span>{%- endif -%}</div><div class="ct-prod-overlay"><span class="ct-prod-overlay-btn">Customize This</span></div></div>
-        <div class="ct-prod-info"><span class="ct-prod-badge">Limited</span><div class="ct-prod-name">Custom Crop Tee</div><div class="ct-prod-colors"><div class="ct-swatch" style="background:#111"></div><div class="ct-swatch" style="background:#8b1c1c"></div><div class="ct-swatch" style="background:#2d5a2d"></div></div><div><span class="ct-prod-price">$29</span><span class="ct-prod-price-orig">$38</span></div></div>
+        <div class="ct-prod-img"><div class="ct-prod-img-inner">{%- assign prod4 = all_products['custom-crop-tee'] -%}{%- if prod4.featured_image -%}{{ prod4.featured_image | image_url: width: 600 | image_tag: alt: prod4.title, loading: 'lazy', sizes: '(max-width: 960px) 50vw, 25vw' }}{%- else -%}<span class="ct-prod-img-hint">Crop Tee Image</span>{%- endif -%}</div><a class="ct-prod-overlay" href="/pages/shirt-designer" aria-label="Customize this product"><span class="ct-prod-overlay-btn">Customize This</span></a></div>
+        <div class="ct-prod-info"><span class="ct-prod-badge">Limited</span><div class="ct-prod-name">Custom Crop Tee</div><div class="ct-prod-colors" role="list" aria-label="Available colors"><span class="ct-swatch" role="listitem" aria-label="Black" style="background:#111"></span><span class="ct-swatch" role="listitem" aria-label="Crimson" style="background:#8b1c1c"></span><span class="ct-swatch" role="listitem" aria-label="Forest Green" style="background:#2d5a2d"></span></div><div><span class="ct-prod-price">$29</span><span class="ct-prod-price-orig">$38</span></div></div>
       </a>
     </div>
   </section>
